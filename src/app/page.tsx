@@ -16,7 +16,7 @@ const page = async () => {
   console.log("page.tsx", data);
   return (
     <div className="">
-      <Explore data={data.data} />
+      <Explore data={data.data ?? []} />
     </div>
   );
 };
