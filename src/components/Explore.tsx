@@ -24,35 +24,43 @@ const Explore = ({ data }: ExploreProps) => {
   }, [count]);
 
   return (
-    <div className="p-5 h-screen overflow-auto">
-      <div className="flex flex-col justify-center items-center">
-        {data.map((item) => {
-          return (
-            <div
-              key={item.id}
-              onClick={() => {}}
-              className="p-5 cursor-pointer rounded-2xl bg-red-50 shadow-lg space-y-2 my-3 justify-center flex flex-col h-[150px] items-center w-[500px]"
-            >
-              <h2>{item.title}</h2>
-              <div>{item.audio}</div>
-              <div className="flex gap-2">
-                <div>{item.likes}</div>
-                <div>{item.comments}</div>
-                <div>{item.createdAt}</div>
+    <>
+      {data.length === 0 ? (
+        <>
+          <div className="items-center flex justify-between">Loading ....</div>
+        </>
+      ) : (
+        <div className="p-5 h-screen overflow-auto">
+          <div className="flex flex-col justify-center items-center">
+            {data.map((item) => {
+              return (
                 <div
-                  className="bg-blue-100 px-2 rounded-2xl"
-                  onClick={() => {
-                    setCount(count + 1);
-                  }}
+                  key={item.id}
+                  onClick={() => {}}
+                  className="p-5 cursor-pointer rounded-2xl bg-red-50 shadow-lg space-y-2 my-3 justify-center flex flex-col h-[150px] items-center w-[500px]"
                 >
-                  {count}
+                  <h2>{item.title}</h2>
+                  <div>{item.audio}</div>
+                  <div className="flex gap-2">
+                    <div>{item.likes}</div>
+                    <div>{item.comments}</div>
+                    <div>{item.createdAt}</div>
+                    <div
+                      className="bg-blue-100 px-2 rounded-2xl"
+                      onClick={() => {
+                        setCount(count + 1);
+                      }}
+                    >
+                      {count}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
