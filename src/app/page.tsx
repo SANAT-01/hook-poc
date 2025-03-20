@@ -7,7 +7,7 @@ export const metadata = {
 
 const page = async () => {
   const hooks = await fetch(
-    "http://localhost:3000/api/hooks"
+    "https://67dc1dd21fd9e43fe477460e.mockapi.io/hook/hooks"
     // {
     //   cache: "no-cache",
     // }
