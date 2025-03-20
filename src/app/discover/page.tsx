@@ -5,10 +5,17 @@ export const metadata = {
   description: "Discover and create your own video music",
 };
 
-const Discover = () => {
+const Discover = async () => {
+  const apiData = await new Promise<number[]>((resolve) => {
+    setTimeout(async () => {
+      const result = [1, 2, 3, 4, 5];
+      resolve(result as number[]);
+    }, 5000); // 5000 ms = 5 seconds delay
+  });
+
   return (
     <div>
-      <DiscoverMore />
+      <DiscoverMore apiData={apiData} />
     </div>
   );
 };

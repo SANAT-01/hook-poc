@@ -1,19 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-const data = [1, 2, 3, 4, 5];
-
-const DiscoverMore = () => {
-  const [apiData, setApiData] = useState<number[]>([]);
-
-  useEffect(() => {
-    setTimeout(async () => {
-      setApiData(data);
-    }, 5000);
-  }, []);
-
-  console.log(apiData);
-
+const DiscoverMore = ({ apiData }: { apiData: number[] }) => {
   return (
     <>
       {apiData.length === 0 ? (
