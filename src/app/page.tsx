@@ -22,8 +22,7 @@ const fetchHooks = async () => {
       hooks.map(async (hook: Hook) => {
         const hookId = hook.id;
         const hookResponse = await fetch(
-          `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
-          { cache: "no-store" }
+          `https://api.develop.hookmusic.com/public/hooks/${hookId}`
         );
         if (!hookResponse.ok) return null;
 
