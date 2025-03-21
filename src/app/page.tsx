@@ -6,11 +6,10 @@ export const metadata = {
   description: "Create your own video music",
 };
 
-// ✅ Fetch data at build time (SSG) using `fetch()` with cache
 const fetchHooks = async () => {
   try {
     const response = await fetch(
-      "https://api.develop.hookmusic.com/public/explore/discover?limit=10",
+      "https://api.develop.hookmusic.com/public/explore/discover",
       { cache: "force-cache" } // This caches the data at build time (SSG)
     );
 
@@ -46,7 +45,6 @@ const fetchHooks = async () => {
   }
 };
 
-// ✅ Page component using Static Fetching
 export default async function Home() {
   const videos = await fetchHooks();
 
