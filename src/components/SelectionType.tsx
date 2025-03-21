@@ -15,6 +15,7 @@ const SelectionMore = () => {
     };
     fetchData();
   }, []);
+
   return (
     <>
       {apiData.length === 0 ? (
