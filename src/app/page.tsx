@@ -9,8 +9,7 @@ export const metadata = {
 const fetchHooks = async () => {
   try {
     const response = await fetch(
-      "https://api.develop.hookmusic.com/public/explore/discover",
-      { cache: "no-store" }
+      "https://api.develop.hookmusic.com/public/explore/discover"
     );
     console.log(response);
 
@@ -23,8 +22,7 @@ const fetchHooks = async () => {
       hooks.map(async (hook: Hook) => {
         const hookId = hook.id;
         const hookResponse = await fetch(
-          `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
-          { cache: "no-store" }
+          `https://api.develop.hookmusic.com/public/hooks/${hookId}`
         );
         if (!hookResponse.ok) return null;
 
