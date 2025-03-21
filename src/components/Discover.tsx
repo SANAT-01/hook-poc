@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const DiscoverMore = ({ apiData }: { apiData: number[] }) => {
+  const navigation = useRouter();
   return (
     <>
       {apiData.length === 0 ? (
@@ -16,6 +18,9 @@ const DiscoverMore = ({ apiData }: { apiData: number[] }) => {
               return (
                 <div
                   key={item}
+                  onClick={() => {
+                    navigation.push(`/discover/${item}`);
+                  }}
                   className="p-5 cursor-pointer rounded-2xl bg-red-50 shadow-lg space-y-2 my-3 justify-center flex flex-col h-[150px] items-center w-[500px]"
                 >
                   <h2>Title</h2>
