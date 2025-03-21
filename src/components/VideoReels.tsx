@@ -159,7 +159,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                 ref={(el) => {
                   playerRefs.current[index] = el;
                 }}
-                className="h-screen w-full flex items-center justify-center relative"
+                className="relative h-screen w-full flex items-center justify-center"
                 style={{
                   scrollSnapAlign: "center",
                 }}
@@ -204,6 +204,48 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                         ✓
                       </span>
                     )}
+                  </div>
+
+                  {/* Vertical TikTok-Style Buttons */}
+                  <div className="absolute right-4 top-120 transform -translate-y-1/2 flex flex-col gap-3 items-center justify-center z-10">
+                    <button
+                      onClick={() => toggleLike(index)}
+                      className="text-white text-3xl"
+                    >
+                      {likedVideos[index] ? (
+                        <AiFillHeart className="text-red-500" />
+                      ) : (
+                        <AiOutlineHeart />
+                      )}
+                    </button>
+                    <span className="text-white text-sm">
+                      {video.likeCount.toLocaleString()}
+                    </span>
+
+                    <button className="text-white text-3xl">
+                      <AiOutlineComment />
+                    </button>
+                    <span className="text-white text-sm">
+                      {video.commentCount.toLocaleString()}
+                    </span>
+
+                    <button className="text-white text-3xl">
+                      <AiOutlineShareAlt />
+                    </button>
+                    <span className="text-white text-sm">
+                      {video.shareCount.toLocaleString()}
+                    </span>
+
+                    <button className="text-white text-3xl">
+                      <AiFillPlusCircle />
+                    </button>
+                    <span className="text-white text-sm">
+                      {video.reHookCount.toLocaleString()}
+                    </span>
+
+                    <button className="text-white text-3xl">
+                      <IoIosMore />
+                    </button>
                   </div>
 
                   <div className="absolute bottom-22 left-5 text-white z-10">
@@ -324,48 +366,6 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       }}
                     />
                   </div>
-                </div>
-
-                {/* Vertical TikTok-Style Buttons */}
-                <div className="absolute right-105 top-130 transform -translate-y-1/2 flex flex-col gap-4 items-center justify-center z-10">
-                  <button
-                    onClick={() => toggleLike(index)}
-                    className="text-white text-3xl"
-                  >
-                    {likedVideos[index] ? (
-                      <AiFillHeart className="text-red-500" />
-                    ) : (
-                      <AiOutlineHeart />
-                    )}
-                  </button>
-                  <span className="text-white text-sm">
-                    {video.likeCount.toLocaleString()}
-                  </span>
-
-                  <button className="text-white text-3xl">
-                    <AiOutlineComment />
-                  </button>
-                  <span className="text-white text-sm">
-                    {video.commentCount.toLocaleString()}
-                  </span>
-
-                  <button className="text-white text-3xl">
-                    <AiOutlineShareAlt />
-                  </button>
-                  <span className="text-white text-sm">
-                    {video.shareCount.toLocaleString()}
-                  </span>
-
-                  <button className="text-white text-3xl">
-                    <AiFillPlusCircle />
-                  </button>
-                  <span className="text-white text-sm">
-                    {video.reHookCount.toLocaleString()}
-                  </span>
-
-                  <button className="text-white text-3xl">
-                    <IoIosMore />
-                  </button>
                 </div>
               </div>
             ))}
