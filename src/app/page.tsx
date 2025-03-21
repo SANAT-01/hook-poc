@@ -1,6 +1,5 @@
 import VideoReels from "@/components/VideoReels";
 import { Hook } from "@/types/hooks";
-// import https from "https";
 
 export const metadata = {
   title: "Hook Music",
@@ -9,57 +8,32 @@ export const metadata = {
 
 const fetchHooks = async () => {
   try {
-    // const isServer = typeof window === "undefined";
-    // const agent = isServer
-    //   ? new https.Agent({ rejectUnauthorized: false })
-    //   : undefined;
-
-    // First API call - get all hooks
     const response = await fetch(
-      "https://api.develop.hookmusic.com/public/explore/discover?limit=10" // Added limit parameter
-      // {
-      //   cache: "no-store",
-      //   ...(isServer && { agent }),
-      // } as RequestInit
+      "https://api.develop.hookmusic.com/public/explore/discover"
     );
+    console.log(response);
 
     if (!response.ok) throw new Error("Failed to fetch videos");
 
     const data = await response.json();
-    const hooks = data.data;
+    const hooks = data.data.slice(0, 8);
 
-    // Use Promise.all for parallel fetching but limit concurrent requests
-    const batchSize = 5; // Process 5 hooks at a time
-    const hookData = [];
+    const hookData = await Promise.all(
+      hooks.map(async (hook: Hook) => {
+        const hookId = hook.id;
+        const hookResponse = await fetch(
+          `https://api.develop.hookmusic.com/public/hooks/${hookId}`
+        );
+        if (!hookResponse.ok) return null;
 
-    for (let i = 0; i < hooks.length; i += batchSize) {
-      const batch = hooks.slice(i, i + batchSize);
-      const batchResults = await Promise.all(
-        batch.map(async (hook: Hook) => {
-          try {
-            const hookId = hook.id;
-            const hookResponse = await fetch(
-              `https://api.develop.hookmusic.com/public/hooks/${hookId}`
-              // {
-              //   cache: "no-store",
-              //   ...(isServer && { agent }),
-              // } as RequestInit
-            );
-
-            if (!hookResponse.ok) return null;
-            const hookData = await hookResponse.json();
-            return hookData.data.attributes;
-          } catch (error) {
-            console.error(`Error fetching hook ${hook.id}:`, error);
-            return null;
-          }
-        })
-      );
-
-      hookData.push(...batchResults);
-    }
+        const hookData = await hookResponse.json();
+        return hookData.data.attributes;
+      })
+    );
+    console.log(hookData);
 
     const validUrls = hookData.filter((url) => url !== null);
+
     return validUrls;
   } catch (error) {
     console.error("Error fetching signed video URLs:", error);
@@ -68,22 +42,24 @@ const fetchHooks = async () => {
 };
 
 const page = async () => {
-  // Add loading state
-  let hookData: Hook[] = [];
+  const hookData = await fetchHooks();
+  console.log(hookData);
+  // const data = await new Promise<Item[]>((resolve) => {
+  //   setTimeout(async () => {
+  //     const response = await fetch(
+  //       "https://67dc1dd21fd9e43fe477460e.mockapi.io/hook/hooks"
+  //     );
+  //     const result = await response.json();
+  //     resolve(result as Item[]);
+  //   }, 5000); // 5000 ms = 5 seconds delay
+  // });
 
-  try {
-    hookData = await fetchHooks();
-  } catch (error) {
-    console.error("Error in page component:", error);
-  }
+  // console.log("page.tsx", data);
 
   return (
     <div className="">
-      <VideoReels
-        initialData={{
-          data: hookData,
-        }}
-      />
+      {/* <Explore data={data ?? []} /> */}
+      <VideoReels initialData={{ data: hookData }} />
     </div>
   );
 };
