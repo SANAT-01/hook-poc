@@ -42,7 +42,6 @@ const fetchHooks = async () => {
 };
 
 const page = async () => {
-  // Delay the fetch call by 5 seconds using setTimeout
   const hookData = await fetchHooks();
   console.log(hookData);
   // const data = await new Promise<Item[]>((resolve) => {

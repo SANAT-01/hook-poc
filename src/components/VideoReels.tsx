@@ -327,7 +327,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                 </div>
 
                 {/* Vertical TikTok-Style Buttons */}
-                <div className="absolute right-170 top-130 transform -translate-y-1/2 flex flex-col gap-4 items-center justify-center z-10">
+                <div className="absolute right-105 top-130 transform -translate-y-1/2 flex flex-col gap-4 items-center justify-center z-10">
                   <button
                     onClick={() => toggleLike(index)}
                     className="text-white text-3xl"
