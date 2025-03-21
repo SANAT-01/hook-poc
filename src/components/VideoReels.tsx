@@ -177,9 +177,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                     ref={(player) => {
                       videoPlayerRefs.current[index] = player;
                     }}
-                    url={
-                      "https://videos.pexels.com/video-files/9559153/9559153-sd_960_506_25fps.mp4" // for demo purposes
-                    }
+                    url={video.signedVideoUrl}
                     width="100%"
                     height="100%"
                     playing={playingIndex === index && playing}
