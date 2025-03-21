@@ -22,7 +22,8 @@ const fetchHooks = async () => {
       hooks.map(async (hook: Hook) => {
         const hookId = hook.id;
         const hookResponse = await fetch(
-          `https://api.develop.hookmusic.com/public/hooks/${hookId}`
+          `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
+          { cache: "no-store" }
         );
         if (!hookResponse.ok) return null;
 
@@ -30,6 +31,7 @@ const fetchHooks = async () => {
         return hookData.data.attributes;
       })
     );
+    console.log(hookData);
 
     const validUrls = hookData.filter((url) => url !== null);
 
