@@ -60,7 +60,7 @@ const page = async () => {
   return (
     <div className="">
       {/* <Explore data={data ?? []} /> */}
-      <VideoReels initialData={{ data: hookData.slice(0, 10) }} />
+      <VideoReels initialData={{ data: hookData }} />
     </div>
   );
 };
