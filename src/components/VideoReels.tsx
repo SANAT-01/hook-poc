@@ -21,12 +21,15 @@ import { IoIosMore } from "react-icons/io";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { Hook } from "@/types/hooks";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
 
 const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
+  const navigation = useRouter();
   const [videos, setVideos] = useState<Hook[]>([]);
   const [playingIndex, setPlayingIndex] = useState(0);
   const playerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -127,12 +130,22 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     };
   }, [handleScroll]);
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return <></>;
+
+  console.log(videos);
+
   return (
-    <>
+    <div>
       {videos.length === 0 ? (
         <></>
       ) : (
-        <>
+        <div>
           <svg width="0" height="0">
             <defs>
               <clipPath id="flowerClip" clipPathUnits="objectBoundingBox">
@@ -193,10 +206,13 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                     onProgress={(state) => handleProgress(state, index)}
                   />
                   <div className="absolute top-9 left-5 text-white z-10 flex gap-3 justify-center items-center">
-                    <img
+                    <Image
                       className="w-15 h-15 rounded-xl object-cover"
                       src={video.user.attributes.thumbnails.original}
                       alt={`${video.user.attributes.username}'s profile`}
+                      layout="intrinsic"
+                      width={15}
+                      height={15}
                     />
                     <h3 className="font-bold text-lg">
                       {video.user.attributes.username}
@@ -260,13 +276,16 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                     {video.hookSongs && video.hookSongs.length > 0 && (
                       <div className="flex items-center mt-2">
                         <div className="mr-2">
-                          <img
+                          <Image
                             src={
                               video.hookSongs[0].attributes.song.attributes
                                 .coverartUrl
                             }
                             alt="Song cover"
                             className="w-6 h-6 rounded-md"
+                            layout="intrinsic"
+                            width={10}
+                            height={10}
                           />
                         </div>
                         <div>
@@ -274,7 +293,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                             {
                               video.hookSongs[0].attributes.song.attributes
                                 .title
-                            }{" "}
+                            }
                             •
                             {video.hookSongs[0].attributes.song.attributes.artists.map(
                               (artist, i) => (
@@ -332,40 +351,52 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                         />
                       </div>
 
-                      <div className="absolute w-full h-full left-10 top-7 z-20">
+                      <div
+                        className="absolute w-full h-full left-10 top-7 z-20 cursor-pointer"
+                        onClick={() => {
+                          navigation.push("/personal");
+                        }}
+                      >
                         <FaCirclePlus
                           className="w-auto h-auto"
                           style={{ color: "#9785FF" }}
                         />
                       </div>
-                      <img
+                      <Image
                         className="w-12 h-12 rounded-full object-cover relative"
                         src={video.user.attributes.thumbnails.original}
                         style={{
                           clipPath: "url(#flowerClip)",
                         }}
                         alt="User profile"
+                        layout="intrinsic"
+                        width={12}
+                        height={12}
                       />
                     </div>
 
                     {/* You can add more profile pictures here or generate them dynamically */}
                     {/* For now, just showing some sample profile images */}
-                    <img
+                    <Image
                       className="w-12 h-12 rounded-full object-cover"
                       src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                       style={{
                         clipPath: "url(#flowerClip)",
                       }}
+                      width={15}
+                      height={15}
                       alt="Sample profile"
                     />
 
-                    <img
+                    <Image
                       className="w-12 h-12 rounded-full object-cover"
                       src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                       alt="Sample profile"
                       style={{
                         clipPath: "url(#flowerClip)",
                       }}
+                      width={15}
+                      height={15}
                     />
                   </div>
                 </div>
@@ -393,9 +424,9 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
