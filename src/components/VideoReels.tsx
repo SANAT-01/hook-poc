@@ -21,12 +21,14 @@ import { IoIosMore } from "react-icons/io";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import { Hook } from "@/types/hooks";
 import { FaCirclePlus } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
 
 const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
+  const navigation = useRouter();
   const [videos, setVideos] = useState<Hook[]>([]);
   const [playingIndex, setPlayingIndex] = useState(0);
   const playerRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -334,8 +336,11 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
 
                       <div className="absolute w-full h-full left-10 top-7 z-20">
                         <FaCirclePlus
-                          className="w-auto h-auto"
+                          className="w-auto h-auto cursor-pointer"
                           style={{ color: "#9785FF" }}
+                          onClick={() => {
+                            navigation.push("/personal");
+                          }}
                         />
                       </div>
                       <img
