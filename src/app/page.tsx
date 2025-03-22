@@ -47,6 +47,7 @@ const fetchHooks = async () => {
 
 export default async function Home() {
   const videos = await fetchHooks();
+  console.log(videos);
 
   return (
     <div>
