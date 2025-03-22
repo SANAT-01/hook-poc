@@ -9,7 +9,7 @@ const SideBar = () => {
   console.log(pathname);
 
   return (
-    <div className="flex flex-col justify-between h-screen bg-gray-200 space-y-3 py-10 px-10">
+    <div className="flex flex-col justify-between h-screen bg-gray-200 space-y-3 py-10 px-5">
       <div className="space-y-5">
         <div className="py-4">
           <h1 className="text-4xl">Hooks</h1>
@@ -29,7 +29,7 @@ const SideBar = () => {
         <div>
           <h3
             className={`cursor-pointer ${
-              pathname === "/discover" ? "text-blue-500" : ""
+              pathname.includes("/discover") ? "text-blue-500" : ""
             }`}
             onClick={() => {
               navigator.push("/discover");
@@ -39,9 +39,10 @@ const SideBar = () => {
           </h3>
         </div>
       </div>
-      <div className="py-10 flex flex-col space-y-3 text-sm">
+      <div className="py-3 flex flex-col text-sm">
         <span>Company</span>
-        <span>About . Privacy . Terms</span>
+        <span className="text-gray-500 pt-3">About • Privacy • Terms</span>
+        <span className="text-gray-500 pt-5">&copy; 2025 Hook Music</span>
       </div>
     </div>
   );
