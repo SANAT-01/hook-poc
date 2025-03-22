@@ -2,7 +2,6 @@
 import { Hook } from "@/types/hooks";
 import React from "react";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 
 const SelectionMore = ({ apiData }: { apiData: Hook[] }) => {
   const pathname = usePathname();
@@ -29,12 +28,12 @@ const SelectionMore = ({ apiData }: { apiData: Hook[] }) => {
                     key={item.id}
                     className="cursor-pointer rounded-2xl bg-red-50 shadow-lg justify-center flex py-4 items-center h-[400px]"
                   >
-                    <Image
+                    <img
                       src={item.thumbnailUrl}
                       alt={"Hooks-thumbnails"}
-                      layout="intrinsic"
-                      width={200}
-                      height={200}
+                      // layout="intrinsic"
+                      // width={200}
+                      // height={200}
                       className="w-fit h-full"
                     />
                   </div>

@@ -46,8 +46,14 @@ const fetchHooks = async () => {
 };
 
 const SelectionType = async () => {
-  const videos = await fetchHooks();
-  console.log(videos);
+  const videos: Hook[] = await new Promise((resolve) => {
+    setTimeout(async () => {
+      const data = await fetchHooks();
+      resolve(data);
+    }, 3000); // 3-second delay
+  });
+
+  console.log("videos", videos);
   return (
     <div>
       <SelectionMore apiData={videos} />
@@ -56,3 +62,10 @@ const SelectionType = async () => {
 };
 
 export default SelectionType;
+
+export const generateStaticParams = async () => {
+  const data = ["top-filters", "hook-leaderboard", "trending-song"];
+  const x = data.map((slug) => ({ slug: slug }));
+  console.log(x);
+  return x;
+};
