@@ -9,40 +9,42 @@ const SideBar = () => {
   console.log(pathname);
 
   return (
-    <div className="flex flex-col justify-between h-screen bg-gray-200 space-y-3 py-10 px-5">
-      <div className="space-y-5">
-        <div className="py-4">
-          <h1 className="text-4xl">Hooks</h1>
+    <div className="hidden sm:block">
+      <div className="flex flex-col justify-between h-screen bg-gray-200 space-y-3 py-10 px-5 ">
+        <div className="space-y-5">
+          <div className="py-4">
+            <h1 className="text-4xl">Hooks</h1>
+          </div>
+          <div>
+            <h3
+              className={`cursor-pointer ${
+                pathname === "/" ? "text-blue-500" : ""
+              }`}
+              onClick={() => {
+                navigator.push("/");
+              }}
+            >
+              Explore
+            </h3>
+          </div>
+          <div>
+            <h3
+              className={`cursor-pointer ${
+                pathname.includes("/discover") ? "text-blue-500" : ""
+              }`}
+              onClick={() => {
+                navigator.push("/discover");
+              }}
+            >
+              Discover
+            </h3>
+          </div>
         </div>
-        <div>
-          <h3
-            className={`cursor-pointer ${
-              pathname === "/" ? "text-blue-500" : ""
-            }`}
-            onClick={() => {
-              navigator.push("/");
-            }}
-          >
-            Explore
-          </h3>
+        <div className="py-3 flex flex-col text-sm">
+          <span>Company</span>
+          <span className="text-gray-500 pt-3">About • Privacy • Terms</span>
+          <span className="text-gray-500 pt-5">&copy; 2025 Hook Music</span>
         </div>
-        <div>
-          <h3
-            className={`cursor-pointer ${
-              pathname.includes("/discover") ? "text-blue-500" : ""
-            }`}
-            onClick={() => {
-              navigator.push("/discover");
-            }}
-          >
-            Discover
-          </h3>
-        </div>
-      </div>
-      <div className="py-3 flex flex-col text-sm">
-        <span>Company</span>
-        <span className="text-gray-500 pt-3">About • Privacy • Terms</span>
-        <span className="text-gray-500 pt-5">&copy; 2025 Hook Music</span>
       </div>
     </div>
   );

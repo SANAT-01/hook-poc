@@ -1,5 +1,5 @@
 import SelectionMore from "@/components/SelectionType";
-import { Hook } from "@/types/hooks";
+import { User } from "@/types/hooks";
 
 export const metadata = {
   title: "Hook Music - Discover- Selection Type",
@@ -9,44 +9,31 @@ export const metadata = {
 const fetchHooks = async () => {
   try {
     const response = await fetch(
-      "https://api.develop.hookmusic.com/public/explore/discover",
-      { cache: "force-cache" } // This caches the data at build time (SSG)
+      "https://api.develop.hookmusic.com/public/explore/discover"
     );
-
     if (!response.ok) throw new Error("Failed to fetch videos");
-
     const data = await response.json();
-    const hooks = data.data.slice(0, 10); // because otherwise all 20 data will be there
-
-    // Fetch signed video URLs in parallel
-    const hookData = await Promise.all(
-      hooks.map(async (hook: Hook) => {
-        try {
-          const hookId = hook.id;
-          const hookResponse = await fetch(
-            `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
-            { cache: "force-cache" } // Ensures fetched data is cached
-          );
-
-          if (!hookResponse.ok) return null;
-          const hookData = await hookResponse.json();
-          return hookData.data.attributes;
-        } catch (error) {
-          console.error(`Error fetching hook ${hook.id}:`, error);
-          return null;
-        }
-      })
-    );
-
-    return hookData.filter((url) => url !== null);
+    return data.data.slice(0, 10); // Limit to 10 items
   } catch (error) {
-    console.error("Error fetching signed video URLs:", error);
+    console.error("Error fetching data:", error);
     return [];
   }
 };
 
+// Generate static paths for dynamic pages in SSG
+export const generateStaticParams = async () => {
+  // Here, you would fetch or define the types you want to statically generate
+  const types = [
+    "top-filters",
+    "hook-leaderboard",
+    "trending-song",
+    "trending-hook",
+  ];
+  return types.map((type) => ({ type })); // Generate the params for each type
+};
+
 const SelectionType = async () => {
-  const videos: Hook[] = await new Promise((resolve) => {
+  const videos: User[] = await new Promise((resolve) => {
     setTimeout(async () => {
       const data = await fetchHooks();
       resolve(data);
@@ -62,10 +49,3 @@ const SelectionType = async () => {
 };
 
 export default SelectionType;
-
-export const generateStaticParams = async () => {
-  const data = ["top-filters", "hook-leaderboard", "trending-song"];
-  const x = data.map((slug) => ({ slug: slug }));
-  console.log(x);
-  return x;
-};

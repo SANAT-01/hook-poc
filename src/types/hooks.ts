@@ -13,6 +13,7 @@ export interface UserAttributes {
   isVerified: boolean;
   profileBackground: unknown;
   createdAt: string;
+  thumbnailUrl: string;
   thumbnails: {
     original: string;
     small: string;

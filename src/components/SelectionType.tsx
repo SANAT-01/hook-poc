@@ -1,9 +1,9 @@
 "use client";
-import { Hook } from "@/types/hooks";
+import { User } from "@/types/hooks";
 import React from "react";
 import { usePathname } from "next/navigation";
 
-const SelectionMore = ({ apiData }: { apiData: Hook[] }) => {
+const SelectionMore = ({ apiData }: { apiData: User[] }) => {
   const pathname = usePathname();
 
   console.log(apiData);
@@ -22,14 +22,14 @@ const SelectionMore = ({ apiData }: { apiData: Hook[] }) => {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 px-5 py-3">
-              {apiData.map((item: Hook) => {
+              {apiData.map((item: User) => {
                 return (
                   <div
                     key={item.id}
                     className="cursor-pointer rounded-2xl bg-red-50 shadow-lg justify-center flex py-4 items-center h-[400px]"
                   >
                     <img
-                      src={item.thumbnailUrl}
+                      src={item.attributes.thumbnailUrl}
                       alt={"Hooks-thumbnails"}
                       // layout="intrinsic"
                       // width={200}
