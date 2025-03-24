@@ -10,7 +10,8 @@ const fetchHooks = async () => {
   try {
     const response = await fetch(
       "https://api.develop.hookmusic.com/public/explore/discover",
-      { cache: "force-cache" } // This caches the data at build time (SSG)
+      { cache: "no-store" } // Forces Server-Side Rendering (SSR)
+      // { cache: "force-cache" } // This caches the data at build time (SSG)
     );
 
     if (!response.ok) throw new Error("Failed to fetch videos");
@@ -25,7 +26,8 @@ const fetchHooks = async () => {
           const hookId = hook.id;
           const hookResponse = await fetch(
             `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
-            { cache: "force-cache" } // Ensures fetched data is cached
+            { cache: "no-store" } // Forces Server-Side Rendering (SSR)
+            // { cache: "force-cache" } // Ensures fetched data is cached
           );
 
           if (!hookResponse.ok) return null;

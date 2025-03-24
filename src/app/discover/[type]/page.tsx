@@ -28,6 +28,7 @@ export const generateStaticParams = async () => {
     "hook-leaderboard",
     "trending-song",
     "trending-hook",
+    "top-mashups",
   ];
   return types.map((type) => ({ type })); // Generate the params for each type
 };
@@ -37,7 +38,7 @@ const SelectionType = async () => {
     setTimeout(async () => {
       const data = await fetchHooks();
       resolve(data);
-    }, 3000); // 3-second delay
+    }, 5000); // 3-second delay
   });
 
   console.log("videos", videos);
