@@ -180,10 +180,9 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                     ref={(player) => {
                       videoPlayerRefs.current[index] = player;
                     }}
-                    // url={
-                    //   "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
-                    // }
-                    url={video.signedVideoUrl}
+                    url={
+                      "https://cdn.pixabay.com/video/2024/06/17/217122_large.mp4"
+                    }
                     width="100%"
                     height="100%"
                     playing={playingIndex === index && playing}

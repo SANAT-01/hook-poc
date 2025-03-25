@@ -1,22 +1,10 @@
-import withPWAInit from "@ducanh2912/next-pwa";
+import type { NextConfig } from "next";
 
-const withPWA = withPWAInit({
-  dest: "public",
-});
-
-export default withPWA({
-  reactStrictMode: true,
-  experimental: {
-    serverActions: {},
-  },
+const nextConfig: NextConfig = {
+  /* config options here */
   images: {
-    domains: ["dev.media.hookmusic.com", "images.unsplash.com"], // Replace with your video/image CDN
-    formats: ["image/avif", "image/webp"], // Optimized formats for better performance
+    domains: ["dev.media.hookmusic.com", "images.unsplash.com"],
   },
-  headers: async () => [
-    {
-      source: "/manifest.json",
-      headers: [{ key: "Content-Type", value: "application/manifest+json" }],
-    },
-  ],
-});
+};
+
+export default nextConfig;
