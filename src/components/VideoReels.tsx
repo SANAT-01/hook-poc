@@ -23,7 +23,7 @@ import { Hook } from "@/types/hooks";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
+import { useIsAppOffline } from "@/lib/isOffline";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -41,6 +41,9 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [showControls, setShowControls] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
   const [isSeeking] = useState(false);
+  const isOff = useIsAppOffline();
+  console.log(isOff);
+
   // Initialize with SSR data or fetch data on the client
   useEffect(() => {
     if (initialData?.data) {
@@ -181,6 +184,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       videoPlayerRefs.current[index] = player;
                     }}
                     url={
+                      video.signedVideoUrl ||
                       "https://cdn.pixabay.com/video/2024/06/17/217122_large.mp4"
                     }
                     width="100%"
