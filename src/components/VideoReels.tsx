@@ -181,6 +181,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       videoPlayerRefs.current[index] = player;
                     }}
                     url={
+                      video.signedVideoUrl ||
                       "https://cdn.pixabay.com/video/2024/06/17/217122_large.mp4"
                     }
                     width="100%"
