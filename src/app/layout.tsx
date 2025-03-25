@@ -25,6 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* <head>
+        <link rel="manifest" href="/src/app/manifest.ts" />
+        <link rel="apple-touch-icon" href="/hook-logo-192.png" />
+        <meta name="theme-color" content="#000000" />
+      </head> */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
