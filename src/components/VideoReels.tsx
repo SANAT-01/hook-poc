@@ -283,7 +283,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
 
                     <button
                       onClick={() => handleShare(index)}
-                      className="text-rose-500 text-3xl"
+                      className="text-white text-3xl"
                     >
                       <AiOutlineShareAlt />
                     </button>

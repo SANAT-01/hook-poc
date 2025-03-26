@@ -8,37 +8,33 @@ export const metadata = {
 
 const fetchHooks = async () => {
   try {
+    // Fetch initial hooks list
     const response = await fetch(
       "https://api.develop.hookmusic.com/public/explore/discover",
-      { cache: "no-store" } // Forces Server-Side Rendering (SSR)
+      { cache: "no-store" } // Forces SSR
       // { cache: "force-cache" } // This caches the data at build time (SSG)
     );
 
     if (!response.ok) throw new Error("Failed to fetch videos");
 
     const data = await response.json();
-    const hooks = data.data.slice(0, 15); // because otherwise all 20 data will be there
+    const hooks = data.data.slice(0, 15);
 
-    // Fetch signed video URLs in parallel
-    const hookData = await Promise.all(
-      hooks.map(async (hook: Hook) => {
-        try {
-          const hookId = hook.id;
-          const hookResponse = await fetch(
-            `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
-            { cache: "no-store" } // Forces Server-Side Rendering (SSR)
-            // { cache: "force-cache" } // Ensures fetched data is cached
-          );
-
-          if (!hookResponse.ok) return null;
-          const hookData = await hookResponse.json();
-          return hookData.data.attributes;
-        } catch (error) {
+    // Fetch all hook details in parallel using `Promise.all`
+    const hookDataPromises = hooks.map((hook: Hook) =>
+      fetch(`https://api.develop.hookmusic.com/public/hooks/${hook.id}`, {
+        cache: "no-store",
+        // { cache: "force-cache" } // This caches the data at build time (SSG)
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json) => json?.data.attributes || null)
+        .catch((error) => {
           console.error(`Error fetching hook ${hook.id}:`, error);
           return null;
-        }
-      })
+        })
     );
+
+    const hookData = await Promise.all(hookDataPromises);
 
     return hookData.filter((url) => url !== null);
   } catch (error) {
