@@ -1,9 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { MixpanelTracking } from "../../services/mixpanel";
 
 const DiscoverMore = ({ apiData }: { apiData: number[] }) => {
   const navigation = useRouter();
+
+  useEffect(() => {
+    const mixpanelInstance = MixpanelTracking.getInstance();
+
+    // Example user data - Replace with real user data from your auth system
+    const userId = "67890"; // Fetch from auth context or API
+    const userName = "Prajwal";
+    const userEmail = "Prajwal@example.com";
+
+    // Identify user
+    mixpanelInstance.identifyUser(userId, userName, userEmail);
+
+    // Track page view
+    mixpanelInstance.track("Page View", { page: "Discover" });
+  }, []);
 
   return (
     <>

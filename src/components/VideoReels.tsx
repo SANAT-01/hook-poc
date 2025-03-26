@@ -23,6 +23,7 @@ import { Hook } from "@/types/hooks";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { MixpanelTracking } from "../../services/mixpanel";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -40,6 +41,21 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [showControls, setShowControls] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
   const [isSeeking] = useState(false);
+
+  useEffect(() => {
+    const mixpanelInstance = MixpanelTracking.getInstance();
+
+    // Example user data - Replace with real user data from your auth system
+    const userId = "12345"; // Fetch from auth context or API
+    const userName = "Sanat";
+    const userEmail = "sanat@example.com";
+
+    // Identify user
+    mixpanelInstance.identifyUser(userId, userName, userEmail);
+
+    // Track page view
+    mixpanelInstance.track("Page View", { page: "/" });
+  }, []);
 
   // Initialize with SSR data or fetch data on the client
   useEffect(() => {
