@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useDebounce } from "use-debounce";
 import ReactPlayer from "react-player";
 import {
   BiPlay,
@@ -23,6 +24,8 @@ import { Hook } from "@/types/hooks";
 import { FaCirclePlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import ShareModal from "./ShareModel";
+
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -40,6 +43,8 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [showControls, setShowControls] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
   const [isSeeking] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [currentShareUrl, setCurrentShareUrl] = useState("");
 
   // Initialize with SSR data or fetch data on the client
   useEffect(() => {
@@ -93,23 +98,26 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   };
 
   // Scroll with Mouse Wheel (Throttled)
-  const handleScroll = useCallback(
-    (e: WheelEvent) => {
-      if (isScrolling) return;
-      setIsScrolling(true);
+  const [debouncedHandleScroll] = useDebounce((e: WheelEvent) => {
+    if (isScrolling) return; // Prevent multiple scrolls
+    setIsScrolling(true);
 
-      if (e.deltaY > 0 && playingIndex < videos.length - 1) {
-        scrollToIndex(playingIndex + 1);
-      } else if (e.deltaY < 0 && playingIndex > 0) {
-        scrollToIndex(playingIndex - 1);
-      }
+    if (e.deltaY > 0 && playingIndex < videos.length - 1) {
+      scrollToIndex(playingIndex + 1);
+    } else if (e.deltaY < 0 && playingIndex > 0) {
+      scrollToIndex(playingIndex - 1);
+    }
 
-      setTimeout(() => {
-        setIsScrolling(false);
-      }, 200); // Adding a timeout value here
-    },
-    [playingIndex, videos.length, isScrolling]
-  );
+    // Reset `isScrolling` after a short delay
+    setTimeout(() => setIsScrolling(false), 500);
+  }, 250);
+
+  useEffect(() => {
+    const handleScroll = (e: WheelEvent) => debouncedHandleScroll(e);
+
+    window.addEventListener("wheel", handleScroll);
+    return () => window.removeEventListener("wheel", handleScroll);
+  }, [playingIndex, debouncedHandleScroll]);
 
   // Update progress for the current video
   const handleProgress = (state: { played: number }, index: number) => {
@@ -123,12 +131,28 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   };
 
-  useEffect(() => {
-    window.addEventListener("wheel", handleScroll);
-    return () => {
-      window.removeEventListener("wheel", handleScroll);
-    };
-  }, [handleScroll]);
+  // TODO: how to generate url is remaaining (Function to handle sharing)
+  const handleShare = (index: number) => {
+    // Get the current video's URL or generate one
+    const videoUrl = videos[index]?.signedVideoUrl || "";
+
+    // For demo purposes, we'll use the current URL if signedVideoUrl isn't available
+    const shareUrl =
+      videoUrl || (typeof window !== "undefined" ? window.location.href : "");
+
+    setCurrentShareUrl(shareUrl);
+    setIsShareModalOpen(true);
+
+    // Optional: Increment share count in UI (you might want to send this to your backend)
+    setVideos((prev) => {
+      const newVideos = [...prev];
+      newVideos[index] = {
+        ...newVideos[index],
+        shareCount: newVideos[index].shareCount + 1,
+      };
+      return newVideos;
+    });
+  };
 
   return (
     <>
@@ -238,12 +262,17 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       {video.commentCount.toLocaleString()}
                     </span>
 
-                    <button className="text-white text-3xl">
+                    <button
+                      onClick={() => handleShare(index)}
+                      className="text-rose-500 text-3xl"
+                    >
                       <AiOutlineShareAlt />
                     </button>
                     <span className="text-white text-sm">
                       {video.shareCount.toLocaleString()}
                     </span>
+
+                    {/* Render the ShareModal */}
 
                     <button className="text-white text-3xl">
                       <AiFillPlusCircle />
@@ -413,6 +442,11 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
               </button>
             </div>
           </div>
+          <ShareModal
+            url={currentShareUrl}
+            onClose={() => setIsShareModalOpen(false)}
+            isOpen={isShareModalOpen}
+          ></ShareModal>
         </>
       )}
     </>

@@ -17,7 +17,7 @@ const fetchHooks = async () => {
     if (!response.ok) throw new Error("Failed to fetch videos");
 
     const data = await response.json();
-    const hooks = data.data.slice(0, 7); // because otherwise all 20 data will be there
+    const hooks = data.data.slice(0, 15); // because otherwise all 20 data will be there
 
     // Fetch signed video URLs in parallel
     const hookData = await Promise.all(
