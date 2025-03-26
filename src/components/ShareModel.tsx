@@ -16,7 +16,6 @@ import {
   FaTelegram,
   FaYoutube,
 } from "react-icons/fa";
-import { ImEmbed2 } from "react-icons/im";
 
 import Modal from "./Modal";
 
@@ -139,6 +138,9 @@ const ShareModal: React.FC<ShareModalProps> = ({ url, onClose, isOpen }) => {
             ].map((app, index) => (
               <button
                 key={index}
+                onClick={() => {
+                  shareOnPlatform(app.name.toLowerCase());
+                }}
                 className="w-[22%] flex flex-col items-center mb-2"
               >
                 <div className={`${app.bg} p-3 rounded-full mb-2`}>
