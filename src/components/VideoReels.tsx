@@ -24,6 +24,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MixpanelTracking } from "../../services/mixpanel";
+import { faker } from "@faker-js/faker";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -41,21 +42,23 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [showControls, setShowControls] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
   const [isSeeking] = useState(false);
+  const isInitialized = useRef(false); // Prevents duplicate execution
+
+  const randomName = faker.person.fullName(); // Rowan Nikolaus
+  const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
+  const userId = faker.database.mongodbObjectId(); // 'e175cac316a79afdd0ad3afb'
 
   useEffect(() => {
+    if (isInitialized.current) return; // Run only once
+    isInitialized.current = true;
     const mixpanelInstance = MixpanelTracking.getInstance();
 
-    // Example user data - Replace with real user data from your auth system
-    const userId = "12345"; // Fetch from auth context or API
-    const userName = "Sanat";
-    const userEmail = "sanat@example.com";
-
     // Identify user
-    mixpanelInstance.identifyUser(userId, userName, userEmail);
+    mixpanelInstance.identifyUser(userId, randomName, randomEmail);
 
     // Track page view
     mixpanelInstance.track("Page View", { page: "/" });
-  }, []);
+  }, [randomEmail, randomName, userId]);
 
   // Initialize with SSR data or fetch data on the client
   useEffect(() => {

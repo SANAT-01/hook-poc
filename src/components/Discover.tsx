@@ -1,25 +1,28 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { MixpanelTracking } from "../../services/mixpanel";
+import { faker } from "@faker-js/faker";
 
 const DiscoverMore = ({ apiData }: { apiData: number[] }) => {
   const navigation = useRouter();
+  const isInitialized = useRef(false); // Prevents duplicate execution
+
+  const randomName = faker.person.fullName(); // Rowan Nikolaus
+  const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
+  const userId = faker.database.mongodbObjectId(); // 'e175cac316a79afdd0ad3afb'
 
   useEffect(() => {
+    if (isInitialized.current) return; // Run only once
+    isInitialized.current = true;
     const mixpanelInstance = MixpanelTracking.getInstance();
 
-    // Example user data - Replace with real user data from your auth system
-    const userId = "67890"; // Fetch from auth context or API
-    const userName = "Prajwal";
-    const userEmail = "Prajwal@example.com";
-
     // Identify user
-    mixpanelInstance.identifyUser(userId, userName, userEmail);
+    mixpanelInstance.identifyUser(userId, randomName, randomEmail);
 
     // Track page view
-    mixpanelInstance.track("Page View", { page: "Discover" });
-  }, []);
+    mixpanelInstance.track("Page View", { page: "/discover" });
+  }, [randomEmail, randomName, userId]);
 
   return (
     <>

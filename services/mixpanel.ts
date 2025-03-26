@@ -18,7 +18,7 @@ export class MixpanelTracking {
         "a6976a779862c7d872c372821d57b021",
       {
         debug: true,
-        track_pageview: true,
+        // track_pageview: true,
         persistence: "localStorage",
       }
     );

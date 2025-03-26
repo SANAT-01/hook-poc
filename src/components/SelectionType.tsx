@@ -1,13 +1,32 @@
 "use client";
 import { User } from "@/types/hooks";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { MixpanelTracking } from "../../services/mixpanel";
+import { faker } from "@faker-js/faker";
 
 const SelectionMore = ({ apiData }: { apiData: User[] }) => {
   const pathname = usePathname();
 
   console.log(apiData);
+
+  const isInitialized = useRef(false); // Prevents duplicate execution
+  const randomName = faker.person.fullName(); // Rowan Nikolaus
+  const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
+  const userId = faker.database.mongodbObjectId(); // 'e175cac316a79afdd0ad3afb'
+
+  useEffect(() => {
+    if (isInitialized.current) return; // Run only once
+    isInitialized.current = true;
+    const mixpanelInstance = MixpanelTracking.getInstance();
+
+    // Identify user
+    mixpanelInstance.identifyUser(userId, randomName, randomEmail);
+
+    // Track page view
+    mixpanelInstance.track("Page View", { page: pathname });
+  }, [pathname, randomEmail, randomName, userId]);
 
   return (
     <>
