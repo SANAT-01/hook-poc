@@ -26,6 +26,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ShareModal from "./ShareModel";
 
+import { MixpanelTracking } from "../../services/mixpanel";
+import { faker } from "@faker-js/faker";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -45,6 +47,23 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [isSeeking] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [currentShareUrl, setCurrentShareUrl] = useState("");
+  const isInitialized = useRef(false); // Prevents duplicate execution
+
+  const randomName = faker.person.fullName(); // Rowan Nikolaus
+  const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
+  const userId = faker.database.mongodbObjectId(); // 'e175cac316a79afdd0ad3afb'
+
+  useEffect(() => {
+    if (isInitialized.current) return; // Run only once
+    isInitialized.current = true;
+    const mixpanelInstance = MixpanelTracking.getInstance();
+
+    // Identify user
+    mixpanelInstance.identifyUser(userId, randomName, randomEmail);
+
+    // Track page view
+    mixpanelInstance.track("Page View", { page: "/" });
+  }, [randomEmail, randomName, userId]);
 
   // Initialize with SSR data or fetch data on the client
   useEffect(() => {
