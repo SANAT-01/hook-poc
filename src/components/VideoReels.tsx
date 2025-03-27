@@ -145,8 +145,8 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const handleShare = (index: number) => {
     const url = videos[index]?.signedVideoUrl || "";
     console.log(url.split("/")[3]);
-    // const newVideoId = url.split("/").pop()?.split(".")[0] || "";
-    const newVideoId = url.split("/")[3];
+    const newVideoId = url.split("/").pop()?.split(".")[0] || "";
+    // const newVideoId = url.split("/")[3];
     setVideoUrl(url); // Store video URL in state
     setVideoId(newVideoId);
     setChange((prev) => !prev);
@@ -449,13 +449,8 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
           </div>
           {isShareModalOpen && (
             <ShareModal
-              url={
-                videoId
-                  ? `https://dev.media.hookmusic.com/api/oembed?url=${encodeURIComponent(
-                      videoUrl
-                    )}`
-                  : window.location.href
-              }
+              url={videoId ?? ""}
+              videoUrl={videoUrl ?? ""}
               videoId={videoId ?? ""}
               onClose={() => setIsShareModalOpen(false)}
               isOpen={isShareModalOpen}

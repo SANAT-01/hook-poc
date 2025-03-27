@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import Modal from "./Modal";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface EmbedCodeProps {
-  onClose: () => void;
-  isOpen: boolean;
+  onClose?: () => void;
+  isOpen?: boolean;
   videoId: string;
   setShowEmbedModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const EmbedModal: React.FC<EmbedCodeProps> = ({
   setShowEmbedModal,
-  isOpen,
   videoId,
 }) => {
   const [embedCode, setEmbedCode] = useState("");
@@ -43,28 +41,26 @@ const EmbedModal: React.FC<EmbedCodeProps> = ({
   }, [videoId]);
 
   return (
-    <Modal isOpen={isOpen} onClose={() => setShowEmbedModal(false)}>
-      <div className="bg-white rounded-3xl p-6 relative w-[500px] ">
-        <h3 className="text-black text-xl font-bold mb-6 text-center">
-          Embed Video
-        </h3>
-        <button
-          onClick={() => setShowEmbedModal(false)}
-          className="absolute top-4 right-4 text-black text-xl"
-        >
-          <AiOutlineClose />
-        </button>
+    <div className="bg-white rounded-3xl p-6 relative w-full ">
+      <h3 className="text-black text-xl font-bold mb-6 text-center">
+        Embed Video
+      </h3>
+      <button
+        onClick={() => setShowEmbedModal(false)}
+        className="absolute top-4 right-4 text-black text-xl"
+      >
+        <AiOutlineClose />
+      </button>
 
-        <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6">
-          <textarea
-            value={embedCode}
-            readOnly
-            className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
-            rows={3}
-          />
-        </div>
+      <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6">
+        <textarea
+          value={embedCode}
+          readOnly
+          className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
+          rows={3}
+        />
       </div>
-    </Modal>
+    </div>
   );
 };
 

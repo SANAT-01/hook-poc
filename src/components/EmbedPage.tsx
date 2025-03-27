@@ -4,6 +4,7 @@ import { Hook } from "@/types/hooks";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
+import EmbedModal from "./EmbedModal";
 
 const fetchHooks = async ({ hookId }: { hookId: string }) => {
   try {
@@ -74,6 +75,12 @@ const EmbedPage = ({}) => {
           </div>
         </div>
       </div>
+      {
+        <EmbedModal
+          videoId={pathName.split("/")[2]}
+          setShowEmbedModal={() => {}}
+        />
+      }
     </div>
   );
 };

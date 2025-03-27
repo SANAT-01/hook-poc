@@ -19,9 +19,11 @@ import {
 } from "react-icons/fa";
 import { ImEmbed2 } from "react-icons/im";
 import Modal from "./Modal";
+import { useRouter } from "next/navigation";
 
 interface ShareModalProps {
   url: string; // The main video URL
+  videoUrl: string; // The video URL
   onClose: () => void;
   isOpen: boolean;
   videoId: string;
@@ -32,12 +34,15 @@ const ShareModal: React.FC<ShareModalProps> = ({
   url,
   onClose,
   isOpen,
-  setShowEmbedModal,
+  videoUrl,
 }) => {
+  const navigate = useRouter();
   const copyToClipboard = (text: string, message: string) => {
     navigator.clipboard.writeText(text);
     alert(message);
   };
+
+  console.log(url.split("/"));
 
   const shareOnPlatform = (platform: string) => {
     let shareUrl = "";
@@ -60,8 +65,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
         shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}`;
         break;
       case "embed":
-        setShowEmbedModal(true); // Open embed modal
+        // setShowEmbedModal(true); // Open embed modal
         onClose();
+        navigate.push(`/embed/${url}`);
         return;
       default:
         return;
@@ -85,9 +91,13 @@ const ShareModal: React.FC<ShareModalProps> = ({
           </button>
 
           <div className="flex items-center bg-gray-200 rounded-lg p-3 mb-6">
-            <span className="text-black text-sm truncate flex-1">{url}</span>
+            <span className="text-black text-sm truncate flex-1">
+              {videoUrl}
+            </span>
             <AiOutlineLink
-              onClick={() => copyToClipboard(url, "Link copied to clipboard!")}
+              onClick={() =>
+                copyToClipboard(videoUrl, "Link copied to clipboard!")
+              }
               className="text-purple-800 font-medium ml-3 cursor-pointer"
             />
           </div>
