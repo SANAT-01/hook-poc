@@ -46,8 +46,9 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [progress, setProgress] = useState<number[]>([]);
   const [isSeeking] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
-  const [currentShareUrl, setCurrentShareUrl] = useState("");
   const isInitialized = useRef(false); // Prevents duplicate execution
+  const [videoId, setVideoId] = useState<string>();
+  const [videoUrl, setVideoUrl] = useState("");
 
   const randomName = faker.person.fullName(); // Rowan Nikolaus
   const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
@@ -150,28 +151,24 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   };
 
-  // TODO: how to generate url is remaaining (Function to handle sharing)
   const handleShare = (index: number) => {
-    // Get the current video's URL or generate one
-    const videoUrl = videos[index]?.signedVideoUrl || "";
+    const url = videos[index]?.signedVideoUrl || "";
+    const newVideoId = url.split("/").pop()?.split(".")[0] || "";
 
-    // For demo purposes, we'll use the current URL if signedVideoUrl isn't available
-    const shareUrl =
-      videoUrl || (typeof window !== "undefined" ? window.location.href : "");
+    setVideoUrl(url); // Store video URL in state
+    setVideoId(newVideoId);
 
-    setCurrentShareUrl(shareUrl);
-    setIsShareModalOpen(true);
-
-    // Optional: Increment share count in UI (you might want to send this to your backend)
-    setVideos((prev) => {
-      const newVideos = [...prev];
-      newVideos[index] = {
-        ...newVideos[index],
-        shareCount: newVideos[index].shareCount + 1,
-      };
-      return newVideos;
-    });
+    console.log("Video URL:", url);
+    console.log("Video ID:", newVideoId);
+    console.log(videoId);
   };
+
+  // Open the modal when videoId is updated
+  useEffect(() => {
+    if (videoId) {
+      setIsShareModalOpen(true);
+    }
+  }, [videoId]);
 
   return (
     <>
@@ -461,11 +458,20 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
               </button>
             </div>
           </div>
-          <ShareModal
-            url={currentShareUrl}
-            onClose={() => setIsShareModalOpen(false)}
-            isOpen={isShareModalOpen}
-          ></ShareModal>
+          {isShareModalOpen && (
+            <ShareModal
+              url={
+                videoId
+                  ? `https://dev.media.hookmusic.com/api/oembed?url=${encodeURIComponent(
+                      videoUrl
+                    )}`
+                  : window.location.href
+              }
+              videoId={videoId ?? ""}
+              onClose={() => setIsShareModalOpen(false)}
+              isOpen={isShareModalOpen}
+            />
+          )}
         </>
       )}
     </>
