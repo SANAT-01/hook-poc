@@ -30,7 +30,11 @@ export async function GET(request: Request) {
     thumbnail_url: "https://hookmusic.com/thumbnail.jpg",
     thumbnail_width: 640,
     thumbnail_height: 360,
-    html: `<iframe width="560" height="315" src="http://localhost:3000/embed/${
+    html: `<iframe width="560" height="315" src="${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://hook-poc.vercel.app"
+    }/embed/${
       videoId?.split(".")[0]
     }" frameborder="0" allowfullscreen></iframe>`,
   };

@@ -20,12 +20,15 @@ const EmbedModal: React.FC<EmbedCodeProps> = ({
 
   useEffect(() => {
     if (!videoId) return;
-    console.log(process.env.NODE_ENV);
 
     const fetchEmbedCode = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/oembed?url=https://dev.media.hookmusic.com/${videoId}`
+          `${
+            process.env.NODE_ENV === "development"
+              ? "http://localhost:3000"
+              : "https://hook-poc.vercel.app"
+          }/api/oembed?url=https://dev.media.hookmusic.com/${videoId}`
         );
         const data = await response.json();
         if (data.html) {
