@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
-import { AiOutlineClose  } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 
 interface EmbedCodeProps {
   onClose: () => void;
@@ -20,6 +20,7 @@ const EmbedModal: React.FC<EmbedCodeProps> = ({
 
   useEffect(() => {
     if (!videoId) return;
+    console.log(process.env.NODE_ENV ? "localhost:3000" : "hookmusic.com");
 
     const fetchEmbedCode = async () => {
       try {
