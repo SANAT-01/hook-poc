@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
-import { AiOutlineClose, AiOutlineLink } from "react-icons/ai";
+import { AiOutlineClose  } from "react-icons/ai";
 
 interface EmbedCodeProps {
   onClose: () => void;
@@ -9,14 +9,14 @@ interface EmbedCodeProps {
   setShowEmbedModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EmbedCode: React.FC<EmbedCodeProps> = ({
+const EmbedModal: React.FC<EmbedCodeProps> = ({
   setShowEmbedModal,
   isOpen,
   videoId,
 }) => {
   const [embedCode, setEmbedCode] = useState("");
 
-  console.log(embedCode);
+  // console.log(embedCode);
 
   useEffect(() => {
     if (!videoId) return;
@@ -38,13 +38,9 @@ const EmbedCode: React.FC<EmbedCodeProps> = ({
     fetchEmbedCode();
   }, [videoId]);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(embedCode);
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={() => setShowEmbedModal(false)}>
-      <div className="bg-white rounded-3xl p-6 relative">
+      <div className="bg-white rounded-3xl p-6 relative w-[500px] ">
         <h3 className="text-black text-xl font-bold mb-6 text-center">
           Embed Video
         </h3>
@@ -59,13 +55,8 @@ const EmbedCode: React.FC<EmbedCodeProps> = ({
           <textarea
             value={embedCode}
             readOnly
-            className="w-full text-sm bg-gray-200 outline-none resize-none"
+            className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
             rows={3}
-          />
-          <AiOutlineLink
-            onClick={copyToClipboard}
-            className="text-purple-800 font-medium ml-3 cursor-pointer"
-            title="Copy to clipboard"
           />
         </div>
       </div>
@@ -73,4 +64,4 @@ const EmbedCode: React.FC<EmbedCodeProps> = ({
   );
 };
 
-export default EmbedCode;
+export default EmbedModal;

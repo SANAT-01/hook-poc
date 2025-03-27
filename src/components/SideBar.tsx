@@ -6,7 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 const SideBar = () => {
   const navigator = useRouter();
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <>

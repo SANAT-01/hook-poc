@@ -28,7 +28,7 @@ import ShareModal from "./ShareModel";
 
 import { MixpanelTracking } from "../../services/mixpanel";
 import { faker } from "@faker-js/faker";
-import EmbedCode from "./embedCode";
+import EmbedModal from "./EmbedModal";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -463,7 +463,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
             />
           )}
           {showEmbedModal && (
-            <EmbedCode
+            <EmbedModal
               videoId={videoId ?? ""}
               onClose={() => {
                 setShowEmbedModal(false);

@@ -13,7 +13,6 @@ const VideosScroll: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [playingIndex, setPlayingIndex] = useState(0);
   const playerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const videoPlayerRefs = useRef<(ReactPlayer | null)[]>([]);
-  console.log(playingIndex, playerRefs, videoPlayerRefs);
 
   const [embedCode, setEmbedCode] = useState("");
   const [buffering] = useState(false); // Track buffering state

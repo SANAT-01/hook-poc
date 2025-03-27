@@ -13,7 +13,7 @@ const Discover = async () => {
     }, 5000); // 5000 ms = 5 seconds delay
   });
 
-  console.log(apiData);
+  // console.log(apiData);
 
   return (
     <div>

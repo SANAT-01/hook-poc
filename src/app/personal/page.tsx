@@ -25,7 +25,7 @@ const fetchHooks = async (): Promise<Hook[]> => {
 
 export default async function PersonalPage() {
   const hooks = await fetchHooks(); // Fetching on the server
-  console.log(hooks);
+  // console.log(hooks);
 
   return (
     <div>
