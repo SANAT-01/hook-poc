@@ -20,7 +20,7 @@ const EmbedModal: React.FC<EmbedCodeProps> = ({
 
   useEffect(() => {
     if (!videoId) return;
-    console.log(process.env.NODE_ENV ? "localhost:3000" : "hookmusic.com");
+    console.log(process.env.NODE_ENV);
 
     const fetchEmbedCode = async () => {
       try {
