@@ -28,11 +28,13 @@ import ShareModal from "./ShareModel";
 
 import { MixpanelTracking } from "../../services/mixpanel";
 import { faker } from "@faker-js/faker";
+import EmbedCode from "./embedCode";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
 
 const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
   const navigation = useRouter();
   const [videos, setVideos] = useState<Hook[]>([]);
   const [playingIndex, setPlayingIndex] = useState(0);
@@ -49,6 +51,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const isInitialized = useRef(false); // Prevents duplicate execution
   const [videoId, setVideoId] = useState<string>();
   const [videoUrl, setVideoUrl] = useState("");
+  const [change, setChange] = useState(false);
 
   const randomName = faker.person.fullName(); // Rowan Nikolaus
   const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
@@ -72,18 +75,6 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
       setVideos(initialData?.data);
       setLikedVideos(Array(initialData.data.length).fill(false));
       setProgress(Array(initialData.data.length).fill(0));
-    } else {
-      // Fetch data if not provided from SSR
-      fetch("/api/videos")
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.data) {
-            setVideos(data.data);
-            setLikedVideos(Array(data.data.length).fill(false));
-            setProgress(Array(data.data.length).fill(0));
-          }
-        })
-        .catch((error) => console.error("Error fetching videos:", error));
     }
   }, [initialData]);
 
@@ -153,14 +144,12 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
 
   const handleShare = (index: number) => {
     const url = videos[index]?.signedVideoUrl || "";
-    const newVideoId = url.split("/").pop()?.split(".")[0] || "";
-
+    console.log(url.split("/")[3]);
+    // const newVideoId = url.split("/").pop()?.split(".")[0] || "";
+    const newVideoId = url.split("/")[3];
     setVideoUrl(url); // Store video URL in state
     setVideoId(newVideoId);
-
-    console.log("Video URL:", url);
-    console.log("Video ID:", newVideoId);
-    console.log(videoId);
+    setChange((prev) => !prev);
   };
 
   // Open the modal when videoId is updated
@@ -168,7 +157,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     if (videoId) {
       setIsShareModalOpen(true);
     }
-  }, [videoId]);
+  }, [videoId, change]);
 
   return (
     <>
@@ -302,11 +291,11 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                     </button>
                   </div>
 
-                  <div className="absolute bottom-22 left-5 text-white z-10">
-                    <p className="font-medium text-sm">{video.title}</p>
+                  <div className="absolute bottom-22 left-5 text-white z-10 w-fit">
+                    {/* <p className="font-medium text-sm w-fit">{video.title}</p>
                     {video.description && (
                       <p className="text-sm opacity-80">{video.description}</p>
-                    )}
+                    )} */}
 
                     {/* Song information */}
                     {video.hookSongs && video.hookSongs.length > 0 && (
@@ -470,6 +459,17 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
               videoId={videoId ?? ""}
               onClose={() => setIsShareModalOpen(false)}
               isOpen={isShareModalOpen}
+              setShowEmbedModal={setShowEmbedModal}
+            />
+          )}
+          {showEmbedModal && (
+            <EmbedCode
+              videoId={videoId ?? ""}
+              onClose={() => {
+                setShowEmbedModal(false);
+              }}
+              isOpen={showEmbedModal}
+              setShowEmbedModal={setShowEmbedModal}
             />
           )}
         </>

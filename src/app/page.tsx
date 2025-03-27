@@ -22,10 +22,10 @@ const fetchHooks = async () => {
 
     // Fetch all hook details in parallel using `Promise.all`
     const hookDataPromises = hooks.map((hook: Hook) =>
-      fetch(`https://api.develop.hookmusic.com/public/hooks/${hook.id}`, {
-        cache: "no-store",
-        // { cache: "force-cache" } // This caches the data at build time (SSG)
-      })
+      fetch(
+        `https://api.develop.hookmusic.com/public/hooks/${hook.id}`,
+        { cache: "no-store" } // { cache: "force-cache" } // This caches the data at build time (SSG)
+      )
         .then((res) => (res.ok ? res.json() : null))
         .then((json) => json?.data.attributes || null)
         .catch((error) => {
@@ -45,7 +45,7 @@ const fetchHooks = async () => {
 
 export default async function Home() {
   const videos = await fetchHooks();
-  console.log(videos);
+  // console.log(videos);
 
   return (
     <div className="main">

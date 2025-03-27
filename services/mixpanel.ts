@@ -30,7 +30,7 @@ export class MixpanelTracking {
     mixpanel.people.set({
       $name: name,
       $email: email,
-      plan: "Premium", // Example property, you can add more
+      plan: "Premium",
     });
   }
 

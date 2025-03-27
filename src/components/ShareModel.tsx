@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   AiOutlineWhatsApp,
   AiOutlineTwitter,
@@ -24,33 +24,15 @@ interface ShareModalProps {
   onClose: () => void;
   isOpen: boolean;
   videoId: string;
+  setShowEmbedModal: React.Dispatch<React.SetStateAction<boolean>>; // Function to set boolean state
 }
 
-const ShareModal: React.FC<ShareModalProps> = ({ url, onClose, isOpen }) => {
-  const [showEmbedModal, setShowEmbedModal] = useState(false);
-  console.log(url, "00==========");
-  const [embedCode, setEmbedCode] = useState("");
-
-  useEffect(() => {
-    const fetchEmbedCode = async () => {
-      // console.log(url);
-      if (!url) return;
-
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-        console.log("data................", data);
-        if (data.html) {
-          setEmbedCode(data.html);
-        }
-      } catch (error) {
-        console.error("Failed to fetch embed code:", error);
-      }
-    };
-
-    fetchEmbedCode();
-  }, [url]);
-
+const ShareModal: React.FC<ShareModalProps> = ({
+  url,
+  onClose,
+  isOpen,
+  setShowEmbedModal,
+}) => {
   const copyToClipboard = (text: string, message: string) => {
     navigator.clipboard.writeText(text);
     alert(message);
@@ -78,6 +60,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ url, onClose, isOpen }) => {
         break;
       case "embed":
         setShowEmbedModal(true); // Open embed modal
+        onClose();
         return;
       default:
         return;
@@ -182,32 +165,6 @@ const ShareModal: React.FC<ShareModalProps> = ({ url, onClose, isOpen }) => {
       </Modal>
 
       {/* Embed Modal */}
-      <Modal isOpen={showEmbedModal} onClose={() => setShowEmbedModal(false)}>
-        <div className="bg-white rounded-3xl p-6 w-5/6 max-w-md relative">
-          <h3 className="text-black text-xl font-bold mb-6 text-center">
-            Embed Video
-          </h3>
-          <button
-            onClick={() => setShowEmbedModal(false)}
-            className="absolute top-4 right-4 text-black text-xl"
-          >
-            <AiOutlineClose />
-          </button>
-
-          <div className="flex items-center bg-gray-200 rounded-lg p-3 mb-6">
-            <textarea
-              value={embedCode}
-              readOnly
-              className="w-full text-sm bg-gray-200 outline-none resize-none"
-              rows={3}
-            />
-            <AiOutlineLink
-              onClick={() => copyToClipboard(embedCode, "Embed code copied!")}
-              className="text-purple-800 font-medium ml-3 cursor-pointer"
-            />
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

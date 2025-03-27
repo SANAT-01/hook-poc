@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
+  console.log(request.url, "my url");
   const url = searchParams.get("url"); // The URL of the resource being embedded
   //   const format = searchParams.get("format") || "json"; // Optional: json/xml (supporting only JSON for now)
 
@@ -14,6 +15,7 @@ export async function GET(request: Request) {
 
   // Extracting ID from URL (assuming structure like: https://hookmusic.com/video/123)
   const videoId = url.split("/").pop();
+  //   console.log("firstPart", videoId);
 
   // Fetch video details (mocking it here, replace with actual API call)
   const videoData = {
@@ -28,7 +30,10 @@ export async function GET(request: Request) {
     thumbnail_url: "https://hookmusic.com/thumbnail.jpg",
     thumbnail_width: 640,
     thumbnail_height: 360,
-    html: `<iframe width="560" height="315" src="http://localhost:3000/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`,
+    html: `<iframe width="560" height="315" src="${request.url.replace(
+      "api/oembed?url=https://dev.media.hookmusic.com",
+      "embed"
+    )}" frameborder="0" allowfullscreen></iframe>`,
   };
 
   return NextResponse.json(videoData);
