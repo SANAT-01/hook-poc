@@ -20,13 +20,13 @@ export async function GET(request: Request) {
   // Fetch video details (mocking it here, replace with actual API call)
   const videoData = {
     id: videoId,
-    title: "Sample Music Hook",
-    author_name: "Hook Artist",
-    author_url: "https://hookmusic.com/artist/hook-artist",
+    title: "Music Hook",
+    author_name: "Hook Music Artist",
+    author_url: "https://hookmusic.com",
     type: "video",
     version: "1.0",
     provider_name: "Hook Music",
-    provider_url: "https://hookmusic.com",
+    provider_url: "https://hook-poc.vercel.app",
     thumbnail_url: "https://hookmusic.com/thumbnail.jpg",
     thumbnail_width: 640,
     thumbnail_height: 360,

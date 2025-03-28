@@ -4,7 +4,6 @@ import { Hook } from "@/types/hooks";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-import EmbedModal from "./EmbedModal";
 import {
   BiFullscreen,
   BiPause,
@@ -37,22 +36,47 @@ const fetchHooks = async ({ hookId }: { hookId: string }) => {
 
 const EmbedPage = ({}) => {
   const pathName = usePathname();
-  console.log(pathName.split("/")[2]);
+  const videoId = pathName.split("/")[2];
   const [videos, setVideos] = useState<Hook | null>(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(false);
+  const [embedCode, setEmbedCode] = useState("");
 
   useEffect(() => {
     // Fetch hook data when the component mounts or `initialData` changes
     const fetchData = async () => {
-      const hookData = await fetchHooks({ hookId: pathName.split("/")[2] }); // Fetch hooks if `initialData` is not available
+      const hookData = await fetchHooks({ hookId: videoId }); // Fetch hooks if `initialData` is not available
       if (hookData) {
         setVideos(hookData); // Set fetched hook data
       }
     };
 
     fetchData(); // Call the fetchData function inside useEffect
-  }, [pathName]); // Dependency array ensures the effect runs when `initialData` changes
+  }, [videoId]); // Dependency array ensures the effect runs when `initialData` changes
+
+  useEffect(() => {
+    if (!videoId) return;
+
+    const fetchEmbedCode = async () => {
+      try {
+        const response = await fetch(
+          `${
+            process.env.NODE_ENV === "development"
+              ? "http://localhost:3000"
+              : "https://hook-poc.vercel.app"
+          }/api/oembed?url=https://dev.media.hookmusic.com/${videoId}`
+        );
+        const data = await response.json();
+        if (data.html) {
+          setEmbedCode(data.html);
+        }
+      } catch (error) {
+        console.error("Error fetching embed code:", error);
+      }
+    };
+
+    fetchEmbedCode();
+  }, [videoId]);
 
   console.log(videos);
 
@@ -106,12 +130,19 @@ const EmbedPage = ({}) => {
           </div>
         </div>
       </div>
-      {
-        <EmbedModal
-          videoId={pathName.split("/")[2]}
-          setShowEmbedModal={() => {}}
-        />
-      }
+      <div className="bg-white rounded-3xl p-6 relative w-full ">
+        <h3 className="text-black text-xl font-bold mb-6 text-center">
+          Embed Video
+        </h3>
+        <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6">
+          <textarea
+            value={embedCode}
+            readOnly
+            className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
+            rows={3}
+          />
+        </div>
+      </div>
     </div>
   );
 };
