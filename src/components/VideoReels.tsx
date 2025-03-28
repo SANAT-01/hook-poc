@@ -35,7 +35,6 @@ interface VideoReelsProps {
 }
 
 const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
-  const [showEmbedModal, setShowEmbedModal] = useState(false);
   const navigation = useRouter();
   const [videos, setVideos] = useState<Hook[]>([]);
   const [playingIndex, setPlayingIndex] = useState(0);
@@ -498,17 +497,6 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
               videoId={videoId ?? ""}
               onClose={() => setIsShareModalOpen(false)}
               isOpen={isShareModalOpen}
-              setShowEmbedModal={setShowEmbedModal}
-            />
-          )}
-          {showEmbedModal && (
-            <EmbedModal
-              videoId={videoId ?? ""}
-              onClose={() => {
-                setShowEmbedModal(false);
-              }}
-              isOpen={showEmbedModal}
-              setShowEmbedModal={setShowEmbedModal}
             />
           )}
         </>

@@ -12,12 +12,8 @@ export async function GET(request: Request) {
     );
   }
 
-  // Extracting ID from URL (assuming structure like: https://hookmusic.com/video/123)
   const videoId = url.split("/").pop()?.split("?")[0];
-  console.log("firstPart", videoId);
-  console.log(url);
 
-  // Fetch video details (mocking it here, replace with actual API call)
   const videoData = {
     id: videoId,
     title: "Music Hook",
@@ -28,15 +24,19 @@ export async function GET(request: Request) {
     provider_name: "Hook Music",
     provider_url: "https://hook-poc.vercel.app",
     thumbnail_url: "https://hookmusic.com/thumbnail.jpg",
-    thumbnail_width: 640,
-    thumbnail_height: 360,
-    html: `<iframe width="560" height="315" src="${
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://hook-poc.vercel.app"
-    }/embed/${
-      videoId?.split(".")[0]
-    }" frameborder="0" allowfullscreen></iframe>`,
+    thumbnail_width: 350,
+    thumbnail_height: 500,
+    html: `
+      <blockquote class="hookmusic-embed" data-embed-id="${videoId}">
+        <a href="https://hookmusic.com/video/${videoId}">Watch on Hook Music</a>
+        <br /> by <a href="https://hookmusic.com">Hook Music</a>
+      </blockquote>
+      <script async src="${
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:3000"
+          : "https://hook-poc.vercel.app"
+      }/embed-script.js"></script>
+    `,
   };
 
   return NextResponse.json(videoData);
