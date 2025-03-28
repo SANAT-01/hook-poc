@@ -27,7 +27,6 @@ interface ShareModalProps {
   onClose: () => void;
   isOpen: boolean;
   videoId: string;
-  setShowEmbedModal: React.Dispatch<React.SetStateAction<boolean>>; // Function to set boolean state
 }
 
 const ShareModal: React.FC<ShareModalProps> = ({
@@ -88,7 +87,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
         break;
       case "embed":
         onClose();
-        navigate.push(`/embed/${url}`);
+        navigate.push(`/embed/${url}?embedShow=true`);
         return;
       default:
         return;
@@ -195,8 +194,6 @@ const ShareModal: React.FC<ShareModalProps> = ({
           </div>
         </div>
       </Modal>
-
-      {/* Embed Modal */}
     </>
   );
 };
