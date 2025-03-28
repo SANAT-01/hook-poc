@@ -29,6 +29,7 @@ import ShareModal from "./ShareModel";
 import { MixpanelTracking } from "../../services/mixpanel";
 import { faker } from "@faker-js/faker";
 import EmbedModal from "./EmbedModal";
+import VideoSkeleton from "./VideoSkeleton";
 interface VideoReelsProps {
   initialData: { data: Hook[] };
 }
@@ -52,10 +53,31 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [videoId, setVideoId] = useState<string>();
   const [videoUrl, setVideoUrl] = useState("");
   const [change, setChange] = useState(false);
+  const [videoReady, setVideoReady] = useState<boolean[]>([]); // Track video readiness
 
   const randomName = faker.person.fullName(); // Rowan Nikolaus
   const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
   const userId = faker.database.mongodbObjectId(); // 'e175cac316a79afdd0ad3afb'
+
+  useEffect(() => {
+    if (isShareModalOpen) {
+      // Disable scrolling
+      document.body.style.overflow = "hidden";
+
+      // Prevent wheel scrolling
+      const preventScroll = (e: WheelEvent) => {
+        e.preventDefault();
+      };
+
+      window.addEventListener("wheel", preventScroll, { passive: false });
+
+      return () => {
+        // Cleanup: re-enable scrolling and remove event listener
+        document.body.style.overflow = "";
+        window.removeEventListener("wheel", preventScroll);
+      };
+    }
+  }, [isShareModalOpen]);
 
   useEffect(() => {
     if (isInitialized.current) return; // Run only once
@@ -75,6 +97,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
       setVideos(initialData?.data);
       setLikedVideos(Array(initialData.data.length).fill(false));
       setProgress(Array(initialData.data.length).fill(0));
+      setVideoReady(Array(initialData.data.length).fill(false)); // Initialize readiness state
     }
   }, [initialData]);
 
@@ -108,8 +131,11 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   };
 
-  // Scroll with Mouse Wheel (Throttled)
+  // Modify existing scroll effect to respect modal open state
   const [debouncedHandleScroll] = useDebounce((e: WheelEvent) => {
+    // Prevent scrolling when share modal is open
+    if (isShareModalOpen) return;
+
     if (isScrolling) return; // Prevent multiple scrolls
     setIsScrolling(true);
 
@@ -159,6 +185,14 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   }, [videoId, change]);
 
+  const handleVideoReady = (index: number) => {
+    setVideoReady((prev) => {
+      const newReady = [...prev];
+      newReady[index] = true;
+      return newReady;
+    });
+  };
+
   return (
     <>
       {videos.length === 0 ? (
@@ -204,6 +238,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                   }
                   onMouseLeave={() => setShowControls(false)}
                 >
+                  {!videoReady[index] && <VideoSkeleton />}
                   {/* Video Player */}
                   <ReactPlayer
                     ref={(player) => {
@@ -224,6 +259,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       aspectRatio: "9/16",
                     }}
                     onProgress={(state) => handleProgress(state, index)}
+                    onReady={() => handleVideoReady(index)} // Mark video as ready
                   />
                   <div className="absolute top-9 left-5 text-white z-10 flex gap-3 justify-center items-center">
                     <Image
@@ -428,20 +464,28 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
 
             {/* Scroll Up & Down Buttons */}
             <div className="absolute right-5 top-1/2 transform -translate-y-1/2 flex flex-col gap-6 items-center z-20">
-              {/* Scroll Up Button */}
               <button
                 onClick={() => scrollToIndex(playingIndex - 1)}
-                className="text-white text-4xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition"
-                disabled={playingIndex === 0}
+                className={`text-white text-4xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition ${
+                  isShareModalOpen || playingIndex === 0
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={isShareModalOpen || playingIndex === 0}
               >
                 <BiChevronUp />
               </button>
 
-              {/* Scroll Down Button */}
               <button
                 onClick={() => scrollToIndex(playingIndex + 1)}
-                className="text-white text-4xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition"
-                disabled={playingIndex === videos.length - 1}
+                className={`text-white text-4xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition ${
+                  isShareModalOpen || playingIndex === videos.length - 1
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={
+                  isShareModalOpen || playingIndex === videos.length - 1
+                }
               >
                 <BiChevronDown />
               </button>

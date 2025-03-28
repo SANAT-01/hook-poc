@@ -11,6 +11,7 @@ import {
   BiVolumeFull,
   BiVolumeMute,
 } from "react-icons/bi";
+import VideoSkeleton from "./VideoSkeleton";
 
 const fetchHooks = async ({ hookId }: { hookId: string }) => {
   try {
@@ -41,6 +42,7 @@ const EmbedPage = ({}) => {
   const [playing, setPlaying] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(false);
   const [embedCode, setEmbedCode] = useState("");
+  const [videoReady, setVideoReady] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch hook data when the component mounts or `initialData` changes
@@ -91,6 +93,8 @@ const EmbedPage = ({}) => {
         >
           {/* Video Wrapper */}
           <div className="relative w-auto max-w-full h-10/12 overflow-hidden rounded-3xl">
+            {/* Show skeleton loader until the video is ready */}
+            {!videoReady && <VideoSkeleton />}
             {/* Video Player */}
             <ReactPlayer
               url={videos?.signedVideoUrl} // Dynamically use the fetched video URL
@@ -104,6 +108,7 @@ const EmbedPage = ({}) => {
                 position: "relative",
                 aspectRatio: "9/16",
               }}
+              onReady={() => setVideoReady(true)}
             />
             <div className="absolute flex flex-row gap-4 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 transition-opacity duration-300">
               <button
@@ -131,16 +136,16 @@ const EmbedPage = ({}) => {
         </div>
       </div>
       <div className="flex items-center justify-center">
-        <div className="flex flex-col items-center justify-center rounded-4xl relative w-6/12">
+        <div className="flex flex-col items-center justify-center relative w-6/12 -mt-10">
           <h3 className="text-black text-xl font-bold mb-2 text-center">
             Embed Video
           </h3>
-          <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6 justify-center">
+          <div className="flex w-full items-center bg-gray-200 rounded-2xl p-3 mb-6 justify-center">
             <textarea
               value={embedCode}
               readOnly
               className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
-              rows={1}
+              rows={2}
             />
           </div>
         </div>
