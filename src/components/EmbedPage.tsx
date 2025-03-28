@@ -5,6 +5,13 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import EmbedModal from "./EmbedModal";
+import {
+  BiFullscreen,
+  BiPause,
+  BiPlay,
+  BiVolumeFull,
+  BiVolumeMute,
+} from "react-icons/bi";
 
 const fetchHooks = async ({ hookId }: { hookId: string }) => {
   try {
@@ -32,6 +39,8 @@ const EmbedPage = ({}) => {
   const pathName = usePathname();
   console.log(pathName.split("/")[2]);
   const [videos, setVideos] = useState<Hook | null>(null);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [muted, setMuted] = useState<boolean>(false);
 
   useEffect(() => {
     // Fetch hook data when the component mounts or `initialData` changes
@@ -63,15 +72,37 @@ const EmbedPage = ({}) => {
               url={videos?.signedVideoUrl} // Dynamically use the fetched video URL
               width="100%"
               height="100%"
-              playing={true}
+              playing={playing}
               loop
-              muted={false}
+              muted={muted}
               controls={false}
               style={{
                 position: "relative",
                 aspectRatio: "9/16",
               }}
             />
+            <div className="absolute flex flex-row gap-4 items-center justify-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 transition-opacity duration-300">
+              <button
+                onClick={() => setPlaying((prev) => !prev)}
+                className="text-white text-3xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition"
+              >
+                {playing ? <BiPause /> : <BiPlay />}
+              </button>
+
+              <button
+                onClick={() => setMuted((prev) => !prev)}
+                className="text-white text-3xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition"
+              >
+                {muted ? <BiVolumeMute /> : <BiVolumeFull />}
+              </button>
+
+              <button
+                // onClick={handleFullscreen}
+                className="text-white text-3xl p-3 rounded-full bg-black/40 hover:bg-black/60 transition"
+              >
+                <BiFullscreen />
+              </button>
+            </div>
           </div>
         </div>
       </div>
