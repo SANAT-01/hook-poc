@@ -44,7 +44,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
 
   const handleEmbedClick = () => {
     onClose();
-    navigate.push(`/embed/${url}`);
+    navigate.push(`/embed/${url}?embedShow=true`);
   };
 
   const shareButtons = [
