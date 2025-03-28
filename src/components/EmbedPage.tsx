@@ -36,7 +36,6 @@ const fetchHooks = async ({ hookId }: { hookId: string }) => {
 
 const EmbedPage = ({}) => {
   const searchParams = useSearchParams();
-  console.log(searchParams.get("embedShow"));
   const pathName = usePathname();
   const videoId = pathName.split("/")[2];
   const [videos, setVideos] = useState<Hook | null>(null);
@@ -79,8 +78,6 @@ const EmbedPage = ({}) => {
 
     fetchEmbedCode();
   }, [videoId]);
-
-  console.log(videos);
 
   return (
     <div>
@@ -139,12 +136,7 @@ const EmbedPage = ({}) => {
               Embed Video
             </h3>
             <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6 justify-center">
-              <textarea
-                value={embedCode}
-                readOnly
-                className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
-                rows={1}
-              />
+              {embedCode}
             </div>
           </div>
         </div>
