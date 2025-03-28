@@ -130,17 +130,19 @@ const EmbedPage = ({}) => {
           </div>
         </div>
       </div>
-      <div className="bg-white rounded-3xl p-6 relative w-full ">
-        <h3 className="text-black text-xl font-bold mb-6 text-center">
-          Embed Video
-        </h3>
-        <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6">
-          <textarea
-            value={embedCode}
-            readOnly
-            className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
-            rows={3}
-          />
+      <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center rounded-4xl relative w-6/12">
+          <h3 className="text-black text-xl font-bold mb-2 text-center">
+            Embed Video
+          </h3>
+          <div className="flex w-full items-center bg-gray-200 rounded-lg p-3 mb-6 justify-center">
+            <textarea
+              value={embedCode}
+              readOnly
+              className="w-full h-full text-sm bg-gray-200 outline-none resize-none"
+              rows={1}
+            />
+          </div>
         </div>
       </div>
     </div>

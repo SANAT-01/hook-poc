@@ -64,8 +64,29 @@ const ShareModal: React.FC<ShareModalProps> = ({
       case "telegram":
         shareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}`;
         break;
+      case "pinterest":
+        shareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(
+          url
+        )}`;
+        break;
+      case "github":
+        shareUrl = `https://github.com/`;
+        break;
+      case "youtube":
+        shareUrl = `https://www.youtube.com/`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          url
+        )}`;
+        break;
+      case "discord":
+        shareUrl = `https://discord.com/`;
+        break;
+      case "slack":
+        shareUrl = `https://slack.com/intl/en-in/`;
+        break;
       case "embed":
-        // setShowEmbedModal(true); // Open embed modal
         onClose();
         navigate.push(`/embed/${url}`);
         return;
@@ -163,12 +184,12 @@ const ShareModal: React.FC<ShareModalProps> = ({
               <button
                 key={index}
                 onClick={() => shareOnPlatform(app.name.toLowerCase())}
-                className="w-[22%] flex flex-col items-center mb-2"
+                className="w-[22%] flex flex-col items-center mb-2 transition-transform duration-300 ease-in-out transform scale-100 hover:scale-110"
               >
                 <div className={`${app.bg} p-3 rounded-full mb-2`}>
                   {app.icon}
                 </div>
-                <span className="text-gray-600 text-sm">{app.name}</span>
+                <span className="text-gray-600 text-[12px]">{app.name}</span>
               </button>
             ))}
           </div>
