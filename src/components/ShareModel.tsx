@@ -67,7 +67,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-green-600",
       component: WhatsappShareButton,
       props: {
-        url: videoUrl,
+        url: url,
         title: `Check out this video!`,
       },
     },
@@ -77,7 +77,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-blue-600",
       component: FacebookShareButton,
       props: {
-        url: videoUrl,
+        url: url,
         quote: `Check out this amazing video!`,
       },
     },
@@ -87,7 +87,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-blue-400",
       component: TwitterShareButton,
       props: {
-        url: myURL,
+        url: url,
         title: `Check out this video!`,
       },
     },
@@ -97,7 +97,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-blue-500",
       component: TelegramShareButton,
       props: {
-        url: videoUrl,
+        url: url,
         title: `Check out this video!`,
       },
     },
@@ -108,7 +108,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-blue-700",
       component: LinkedinShareButton,
       props: {
-        url: videoUrl,
+        url: url,
       },
     },
     {
@@ -117,9 +117,9 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-gray-600",
       component: EmailShareButton,
       props: {
-        url: videoUrl,
+        url: url,
         subject: `Check out this video!`,
-        body: `I wanted to share this amazing video with you: ${videoUrl}`,
+        body: `I wanted to share this amazing video with you: ${url}`,
       },
     },
     {
