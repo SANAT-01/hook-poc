@@ -47,6 +47,10 @@ const ShareModal: React.FC<ShareModalProps> = ({
     navigate.push(`/embed/${url}?embedShow=true`);
   };
 
+  const myURL = `http://localhost:3000/embed/${
+    videoUrl.split("/")[3].split("?")[0].split(".")[0]
+  }`;
+
   const shareButtons = [
     {
       name: "Embed",
@@ -81,7 +85,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       bg: "bg-blue-400",
       component: TwitterShareButton,
       props: {
-        url: videoUrl,
+        url: myURL,
         title: `Check out this video!`,
       },
     },
@@ -136,6 +140,8 @@ const ShareModal: React.FC<ShareModalProps> = ({
     },
   ];
 
+  console.log(myURL);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="bg-white rounded-3xl p-6 w-5/6 max-w-md relative">
@@ -148,7 +154,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
         </button>
 
         <div className="flex items-center bg-gray-200 rounded-lg p-3 mb-6">
-          <span className="text-black text-sm truncate flex-1">{videoUrl}</span>
+          <span className="text-black text-sm truncate flex-1">{myURL}</span>
           <AiOutlineLink
             onClick={() =>
               copyToClipboard(videoUrl, "Link copied to clipboard!")
