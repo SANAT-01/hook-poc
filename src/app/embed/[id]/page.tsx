@@ -1,13 +1,13 @@
 import EmbedPage from "@/components/EmbedPage";
 
 export const metadata = {
-  title: "Hook Music",
-  description: "Create your own video music",
+  title: "Checkout this new video!",
+  description: "Learn how people are creating their own video music",
   openGraph: {
-    title: "Hook Music - Create Your Own Video Music",
+    title: "Hook Music - Checkout this new video!",
     description: "Experience the best music creation platform with Hook Music.",
-    url: "https://yourdomain.com/show-embed",
-    siteName: "Hook Music",
+    url: "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg",
+    siteName: "Hook Music - Vieo Music",
     images: [
       {
         url: "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg", // Ensure this image exists
@@ -20,7 +20,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hook Music",
+    title: "Hook Music Vieo Music",
     description: "Create your own video music",
     images: [
       "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg",
