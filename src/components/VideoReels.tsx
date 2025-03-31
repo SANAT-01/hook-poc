@@ -131,11 +131,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
 
   // Modify existing scroll effect to respect modal open state
   const [debouncedHandleScroll] = useDebounce((e: WheelEvent) => {
-    // Prevent scrolling when share modal is open
-    if (isShareModalOpen) return;
-
-    if (isScrolling) return; // Prevent multiple scrolls
-    setIsScrolling(true);
+    if (isShareModalOpen) return; // Prevent scrolling when share modal is open
 
     if (e.deltaY > 0 && playingIndex < videos.length - 1) {
       scrollToIndex(playingIndex + 1);
@@ -143,12 +139,17 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
       scrollToIndex(playingIndex - 1);
     }
 
-    // Reset `isScrolling` after a short delay
-    setTimeout(() => setIsScrolling(false), 500);
+    // Delay resetting isScrolling to avoid blocking inputs
+    setTimeout(() => setIsScrolling(false), 200);
   }, 250);
 
   useEffect(() => {
-    const handleScroll = (e: WheelEvent) => debouncedHandleScroll(e);
+    const handleScroll = (e: WheelEvent) => {
+      if (!isScrolling) {
+        setIsScrolling(true);
+        debouncedHandleScroll(e);
+      }
+    };
 
     window.addEventListener("wheel", handleScroll);
     return () => window.removeEventListener("wheel", handleScroll);
@@ -469,7 +470,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
-                disabled={isShareModalOpen || playingIndex === 0}
+                disabled={isShareModalOpen || playingIndex === -1}
               >
                 <BiChevronUp />
               </button>
