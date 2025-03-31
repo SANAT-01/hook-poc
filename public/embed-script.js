@@ -25,11 +25,7 @@ window.onload = () => {
 
     // Create iframe
     const iframe = document.createElement("iframe");
-    iframe.src = `${
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://hook-poc.vercel.app"
-    }/embed/${videoId}`;
+    iframe.src = `https://hook-poc.vercel.app/embed/${videoId}`;
     iframe.width = "350";
     iframe.height = "500";
     iframe.frameBorder = "0";
