@@ -47,9 +47,11 @@ const ShareModal: React.FC<ShareModalProps> = ({
     navigate.push(`/embed/${url}?embedShow=true`);
   };
 
-  const myURL = `http://localhost:3000/embed/${
-    videoUrl.split("/")[3].split("?")[0].split(".")[0]
-  }`;
+  const myURL = `${
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://hook-poc.vercel.app"
+  }/embed/${videoUrl.split("/")[3].split("?")[0].split(".")[0]}`;
 
   const shareButtons = [
     {
@@ -156,9 +158,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
         <div className="flex items-center bg-gray-200 rounded-lg p-3 mb-6">
           <span className="text-black text-sm truncate flex-1">{myURL}</span>
           <AiOutlineLink
-            onClick={() =>
-              copyToClipboard(videoUrl, "Link copied to clipboard!")
-            }
+            onClick={() => copyToClipboard(myURL, "Link copied to clipboard!")}
             className="text-purple-800 font-medium ml-3 cursor-pointer"
           />
         </div>

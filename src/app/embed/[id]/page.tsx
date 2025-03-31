@@ -28,7 +28,13 @@ export const metadata = {
   },
 };
 
-export default async function ShowEmbed() {
+export default async function ShowEmbed({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  console.log(id);
   return (
     <>
       <div className="h-screen overflow-y-auto">
