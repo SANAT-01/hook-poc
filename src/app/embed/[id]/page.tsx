@@ -20,8 +20,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hook Music Vieo Music",
-    description: "Create your own video music",
+    title: "Checkout this new video!",
+    description: "Learn how people are creating their own video music",
     images: [
       "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg",
     ], // Twitter preview image
