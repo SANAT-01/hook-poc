@@ -1,32 +1,75 @@
 import EmbedPage from "@/components/EmbedPage";
+import { Metadata } from "next/types";
 
-export const metadata = {
-  title: "Checkout this new video!",
-  description: "Learn how people are creating their own video music",
-  openGraph: {
-    title: "Hook Music - Checkout this new video!",
-    description: "Experience the best music creation platform with Hook Music.",
-    url: "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg",
-    siteName: "Hook Music - Vieo Music",
-    images: [
-      {
-        url: "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg", // Ensure this image exists
-        width: 1200,
-        height: 630,
-        alt: "Hook Music Preview",
-      },
-    ],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Checkout this new video!",
-    description: "Learn how people are creating their own video music",
-    images: [
-      "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg",
-    ], // Twitter preview image
-  },
+const fetchHookData = async (hookId: string) => {
+  try {
+    const response = await fetch(
+      `https://api.develop.hookmusic.com/public/hooks/${hookId}`,
+      { cache: "no-store" } // Ensures metadata is fresh on each request
+    );
+
+    if (!response.ok) return null;
+    const json = await response.json();
+    return json?.data?.attributes || null;
+  } catch (error) {
+    console.error(`Error fetching hook ${hookId}:`, error);
+    return null;
+  }
 };
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  // Fetch hook data based on the ID
+  const hookData = await fetchHookData(id);
+  // console.log(id, hookData);
+  // If no data is found, return default metadata
+  if (!hookData) {
+    return {
+      title: "Checkout this Hook",
+      description: "Learn how people are creating their own video music",
+    };
+  }
+
+  // Use the hook data to create dynamic metadata
+  const title = hookData.title || "Checkout this new video!";
+  const description =
+    hookData.description ||
+    "Learn how people are creating their own video music";
+  const imageUrl =
+    hookData.imageUrl || `https://dev.media.hookmusic.com/hook_${id}.jpg`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `Hook Music - ${title}`,
+      description,
+      url: `https://hookmusic.com/hook/${id}`,
+      siteName: "Hook Music - Video Music",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: "Hook Music Preview",
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
 
 export default async function ShowEmbed({
   params,
