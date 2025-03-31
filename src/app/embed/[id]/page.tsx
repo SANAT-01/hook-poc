@@ -10,7 +10,7 @@ export const metadata = {
     siteName: "Hook Music",
     images: [
       {
-        url: "https://yourdomain.com/preview-image.jpg", // Ensure this image exists
+        url: "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg", // Ensure this image exists
         width: 1200,
         height: 630,
         alt: "Hook Music Preview",
@@ -22,7 +22,9 @@ export const metadata = {
     card: "summary_large_image",
     title: "Hook Music",
     description: "Create your own video music",
-    images: ["https://yourdomain.com/preview-image.jpg"], // Twitter preview image
+    images: [
+      "https://dev.media.hookmusic.com/hook_1296e219-7486-4183-8849-53ebf0f92968.jpg",
+    ], // Twitter preview image
   },
 };
 
