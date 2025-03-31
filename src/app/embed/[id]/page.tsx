@@ -27,7 +27,7 @@ export async function generateMetadata({
 
   // Fetch hook data based on the ID
   const hookData = await fetchHookData(id);
-  // console.log(id, hookData);
+
   // If no data is found, return default metadata
   if (!hookData) {
     return {
@@ -41,9 +41,8 @@ export async function generateMetadata({
   const description =
     hookData.description ||
     "Learn how people are creating their own video music";
-  const imageUrl =
-    hookData.imageUrl || `https://dev.media.hookmusic.com/hook_${id}.jpg`;
-
+  const imageUrl = hookData.thumbnailUrl;
+  console.log(hookData, title, description, imageUrl);
   return {
     title,
     description,
