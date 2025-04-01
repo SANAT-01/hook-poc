@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useDebounce } from "use-debounce";
 import ReactPlayer from "react-player";
 import {
   BiPlay,
@@ -42,7 +41,6 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [playing, setPlaying] = useState(true);
   const [muted, setMuted] = useState(true);
   const [likedVideos, setLikedVideos] = useState<boolean[]>([]);
-  const [isScrolling, setIsScrolling] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [progress, setProgress] = useState<number[]>([]);
   const [isSeeking] = useState(false);
@@ -52,10 +50,13 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
   const [videoUrl, setVideoUrl] = useState("");
   const [change, setChange] = useState(false);
   const [videoReady, setVideoReady] = useState<boolean[]>([]); // Track video readiness
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  const randomName = faker.person.fullName(); // Rowan Nikolaus
-  const randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
-  const userId = faker.database.mongodbObjectId(); // 'e175cac316a79afdd0ad3afb'
+  const randomName = faker.person.fullName();
+  const randomEmail = faker.internet.email();
+  const userId = faker.database.mongodbObjectId();
+
+  console.log("Rendoring");
 
   useEffect(() => {
     if (isShareModalOpen) {
@@ -99,6 +100,49 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   }, [initialData]);
 
+  // Set up IntersectionObserver
+  useEffect(() => {
+    if (videos.length > 0 && playerRefs.current.length > 0) {
+      // Disconnect any existing observer
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+
+      // Create new observer
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            // Find the index of the entry in our refs array
+            const index = playerRefs.current.findIndex(
+              (ref) => ref === entry.target
+            );
+
+            // If the element is intersecting (visible) and we have a valid index
+            if (entry.isIntersecting && index !== -1) {
+              setPlayingIndex(index);
+              setPlaying(true);
+            }
+          });
+        },
+        {
+          threshold: 0.6, // Element is considered visible when 60% is in view
+          root: null,
+        }
+      );
+
+      // Observe all player elements
+      playerRefs.current.forEach((ref) => {
+        if (ref) observerRef.current?.observe(ref);
+      });
+
+      return () => {
+        if (observerRef.current) {
+          observerRef.current.disconnect();
+        }
+      };
+    }
+  }, [videos.length]);
+
   const togglePlayPause = () => setPlaying((prev) => !prev);
   const toggleMute = () => setMuted((prev) => !prev);
 
@@ -118,42 +162,15 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   };
 
-  // Function to handle scroll
+  // Function to handle manual navigation
   const scrollToIndex = (index: number) => {
-    if (index >= 0 && index < videos.length) {
-      setPlayingIndex(index);
+    if (index >= 0 && index < videos.length && !isShareModalOpen) {
       playerRefs.current[index]?.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
     }
   };
-
-  // Modify existing scroll effect to respect modal open state
-  const [debouncedHandleScroll] = useDebounce((e: WheelEvent) => {
-    if (isShareModalOpen) return; // Prevent scrolling when share modal is open
-
-    if (e.deltaY > 0 && playingIndex < videos.length - 1) {
-      scrollToIndex(playingIndex + 1);
-    } else if (e.deltaY < 0 && playingIndex > 0) {
-      scrollToIndex(playingIndex - 1);
-    }
-
-    // Delay resetting isScrolling to avoid blocking inputs
-    setTimeout(() => setIsScrolling(false), 200);
-  }, 250);
-
-  useEffect(() => {
-    const handleScroll = (e: WheelEvent) => {
-      if (!isScrolling) {
-        setIsScrolling(true);
-        debouncedHandleScroll(e);
-      }
-    };
-
-    window.addEventListener("wheel", handleScroll);
-    return () => window.removeEventListener("wheel", handleScroll);
-  }, [playingIndex, debouncedHandleScroll]);
 
   // Update progress for the current video
   const handleProgress = (state: { played: number }, index: number) => {
@@ -169,9 +186,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
 
   const handleShare = (index: number) => {
     const url = videos[index]?.signedVideoUrl || "";
-    console.log(url.split("/")[3]);
     const newVideoId = url.split("/").pop()?.split(".")[0] || "";
-    // const newVideoId = url.split("/")[3];
     setVideoUrl(url); // Store video URL in state
     setVideoId(newVideoId);
     setChange((prev) => !prev);
@@ -184,13 +199,14 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
     }
   }, [videoId, change]);
 
-  const handleVideoReady = (index: number) => {
+  const handleVideoReady = React.useCallback((index: number) => {
     setVideoReady((prev) => {
+      if (prev[index]) return prev; // Already ready, don't update state
       const newReady = [...prev];
       newReady[index] = true;
       return newReady;
     });
-  };
+  }, []);
 
   return (
     <>
@@ -217,17 +233,14 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
               </clipPath>
             </defs>
           </svg>
-          <div className="h-screen overflow-hidden">
+          <div className="h-screen overflow-y-auto snap-y snap-mandatory">
             {videos.map((video, index) => (
               <div
                 key={index}
                 ref={(el) => {
                   playerRefs.current[index] = el;
                 }}
-                className="relative h-screen w-full flex items-center justify-center"
-                style={{
-                  scrollSnapAlign: "center",
-                }}
+                className="relative h-screen w-full flex items-center justify-center snap-start snap-always"
               >
                 {/* Video Wrapper */}
                 <div
@@ -258,7 +271,20 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       aspectRatio: "9/16",
                     }}
                     onProgress={(state) => handleProgress(state, index)}
-                    onReady={() => handleVideoReady(index)} // Mark video as ready
+                    onReady={() => handleVideoReady(index)}
+                    // Only load when needed (lazy loading)
+                    config={{
+                      file: {
+                        attributes: {
+                          preload:
+                            index === playingIndex ||
+                            index === playingIndex + 1 ||
+                            index === playingIndex - 1
+                              ? "auto"
+                              : "none",
+                        },
+                      },
+                    }}
                   />
                   <div className="absolute top-9 left-5 text-white z-10 flex gap-3 justify-center items-center">
                     <Image
@@ -312,8 +338,6 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       {video.shareCount.toLocaleString()}
                     </span>
 
-                    {/* Render the ShareModal */}
-
                     <button className="text-white text-3xl">
                       <AiFillPlusCircle />
                     </button>
@@ -327,11 +351,6 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                   </div>
 
                   <div className="absolute bottom-22 left-5 text-white z-10 w-fit">
-                    {/* <p className="font-medium text-sm w-fit">{video.title}</p>
-                    {video.description && (
-                      <p className="text-sm opacity-80">{video.description}</p>
-                    )} */}
-
                     {/* Song information */}
                     {video.hookSongs && video.hookSongs.length > 0 && (
                       <div className="flex items-center mt-2">
@@ -433,8 +452,7 @@ const VideoReels: React.FC<VideoReelsProps> = ({ initialData }) => {
                       />
                     </div>
 
-                    {/* You can add more profile pictures here or generate them dynamically */}
-                    {/* For now, just showing some sample profile images */}
+                    {/* Additional profile images */}
                     <Image
                       className="w-12 h-12 rounded-full object-cover"
                       src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
