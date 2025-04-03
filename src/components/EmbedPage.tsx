@@ -82,10 +82,10 @@ const EmbedPage = ({}) => {
   }, [videoId]);
 
   return (
-    <div>
+    <div className="bg-white">
       <div className="h-fit">
         <div
-          className="relative h-screen w-full flex items-center justify-center"
+          className="relative h-screen w-full flex flex-col items-center justify-center"
           style={{
             scrollSnapAlign: "center",
           }}
@@ -132,6 +132,8 @@ const EmbedPage = ({}) => {
               </button>
             </div>
           </div>
+          <div className="text-black">98K My first Hook</div>
+          <div>Discover More Remix on Hook</div>
         </div>
       </div>
       {searchParams.get("embedShow") && (

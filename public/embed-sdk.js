@@ -18,15 +18,15 @@ window.onload = () => {
     wrapper.style.justifyContent = "center";
     wrapper.style.alignItems = "center";
     // wrapper.style.backgroundColor = "#181818"; // Dark theme
-    wrapper.style.padding = "20px";
-    wrapper.style.borderRadius = "12px";
-    wrapper.style.maxWidth = "400px";
-    wrapper.style.margin = "20px auto";
+    // wrapper.style.padding = "0px";
+    // wrapper.style.borderRadius = "0px";
+    // wrapper.style.maxWidth = "400px";
+    // wrapper.style.margin = "20px auto";
 
     // Create iframe
     const iframe = document.createElement("iframe");
     iframe.src = `https://hook-poc.vercel.app/embed/${videoId}`;
-    iframe.width = "350";
+    iframe.width = "245";
     iframe.height = "500";
     iframe.frameBorder = "0";
     iframe.allowFullscreen = true;

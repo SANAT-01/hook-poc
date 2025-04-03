@@ -35,7 +35,7 @@ export async function GET(request: Request) {
         process.env.NODE_ENV === "development"
           ? "http://localhost:3000"
           : "https://hook-poc.vercel.app"
-      }/embed-script.js"></script>
+      }/embed-sdk.js"></script>
     `,
   };
 
